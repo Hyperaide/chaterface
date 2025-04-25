@@ -19,8 +19,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Chaterface",
-  description: "Chaterface is an open source chat interface for large language models.",
+  title: "Ground 0",
+  description: "Ground 0 is an open source chat interface for large language models.",
 };
 
 export default function RootLayout({

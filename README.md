@@ -1,4 +1,4 @@
-# Chaterface
+# Ground 0
 
 A modern chat interface for large language models.
 

@@ -71,32 +71,33 @@ const IntroductionModal: React.FC = () => {
 
               <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-40 px-4">
                 <h1 className={`${lora.className} text-2xl font-semibold text-sage-1 relative z-10`}>Your Interface to Intelligence</h1>
-                <p className={`text-sm text-sage-5 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
+                <p className={`text-sm text-sage-5 relative z-10`}>Ground 0 is an AI learning platform for Visual and AUdio content.</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 px-2 pb-2">
               <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
                 <div className="flex items-center gap-1 mb-1">
-                  <GithubLogo size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-semibold text-sage-12">Open Source</h3>
+                  <h3 className="text-sm font-semibold text-sage-12">Podcasts</h3>
                 </div>
                 <p className="text-xs text-sage-11">
-                  Host it yourself or contribute to the project. It's fully open-source.
+                  Turn any topic into a Podcast from a single Prompt.
                 </p>
-                <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="mt-2 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-5" icon={<Code size={14} weight="bold" />}>View Code</Button>
               </div>
 
               <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
                 <div className="flex items-center gap-1 mb-1">
-                  <ChatTeardropDots size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-semibold text-sage-12">Unified Interface</h3>
+                  {/* <ChatTeardropDots size={16} weight="bold" className="text-sage-12"/> */}
+                  <h3 className="text-sm font-semibold text-sage-12">Visual Learning</h3>
                 </div>
                 <p className="text-xs text-sage-11">
-                  Access leading models from OpenAI, Anthropic, and Google all in one consistent chat interface.
+                 You can create Explanatory Videos from any resource you want
                 </p>
               </div>
             </div>
+            <center>
+               <Button size="small" href="#" className="mt-2 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-5" icon={<Code size={14} weight="bold" />}>Try it out</Button>
+            </center>
           </motion.div>
         </motion.div>
       )}

@@ -48,7 +48,7 @@ export default function PlansModal() {
                 Free Forever
               </p>
               <p className="text-sage-11 text-xs max-w-xs">
-                Chaterface is fully open source so you can host it yourself and never pay a dime.
+                Ground 0 is fully open source so you can host it yourself and never pay a dime.
               </p>
             </div>
 

@@ -6,7 +6,7 @@ export default function Pricing({userId}: {userId: string}) {
     <div className='max-w-2xl grid grid-cols-2 gap-4 mx-auto p-8'>
       <div className='bg-sage-2 p-4 rounded-lg border border-sage-4 flex flex-col justify-between gap-2'>
         <h2 className='text-lg font-medium text-sage-12'>Free Forever</h2>
-        <p className='text-sm text-sage-11'>Chaterface is fully open source so you can host your own instance for free. forever.</p>
+        <p className='text-sm text-sage-11'>Ground 0 is fully open source so you can host your own instance for free. forever.</p>
         <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="bg-sage-4 mt-auto hover:bg-sage-5 text-sage-12 border border-sage-6" icon={<GithubLogo size={14} weight="bold" />}>View on GitHub</Button>
       </div>
 

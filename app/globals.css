@@ -21,7 +21,7 @@
     --color-teal-4: var(--teal-4);
     --color-teal-5: var(--teal-5);
     --color-teal-6: var(--teal-6);
-    --color-teal-7: var(--teal-7); 
+    --color-teal-7: var(--teal-7);
     --color-teal-8: var(--teal-8);
     --color-teal-9: var(--teal-9);
     --color-teal-10: var(--teal-10);
@@ -93,8 +93,6 @@
     --color-sky-11: var(--sky-11);
     --color-sky-12: var(--sky-12);
 
-
-  
     --color-slate-1: var(--slate-1);
     --color-slate-2: var(--slate-2);
     --color-slate-3: var(--slate-3);
@@ -137,4 +135,9 @@
 
 .better-shadow {
   box-shadow: rgba(28, 40, 64, 0.04) 0px 0px 0px 1px, rgba(28, 40, 64, 0.12) 0px 4px 8px -4px, rgba(28, 40, 64, 0.16) 0px 4px 12px -2px;
+}
+
+/* Updated light theme background color */
+body {
+  background-color: #FDF2E9; /* warm orange-ish white */
 }

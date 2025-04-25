@@ -7,7 +7,7 @@ export default function Logo({style = "default", className, color = "black"}: {s
     return (
       <Link href="/" className={`flex flex-row items-center justify-center ${className}`}>
         <Image src={color === "black" ? "/black-logomark.svg" : "/white-logomark.svg"} alt="Logo" width={24} height={24} />
-        <h1 className={`text-sm font-medium text-sage-12`}>Chaterface</h1>
+        <h1 className={`text-sm font-medium text-sage-12`}>Ground 0</h1>
       </Link>
     );
   }
@@ -15,7 +15,7 @@ export default function Logo({style = "default", className, color = "black"}: {s
   return (
     <Link href="/" className={`flex flex-row items-center justify-center ${className}`}>
       <Image src={color === "black" ? "/black-logomark.svg" : "/white-logomark.svg"} alt="Logo" width={32} height={32} />
-      <h1 className={`text-xl font-medium text-sage-12`}>Chaterface</h1>
+      <h1 className={`text-xl font-medium text-sage-12`}>Ground 0</h1>
     </Link>
   );
 }
