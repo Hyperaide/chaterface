@@ -12,14 +12,14 @@ const _schema = i.schema({
       email: i.string().unique().indexed(),
     }),
     userProfiles: i.entity({
-      credits: i.number(),
-      theme: i.string(),
-      hasPurchasedCredits: i.boolean(),
+      credits: i.number().optional(),
+      theme: i.string().optional(),
+      hasPurchasedCredits: i.boolean().optional(),
     }),
     conversations: i.entity({
       name: i.string(),
       createdAt: i.date().indexed(),
-      sessionId: i.string(),
+      sessionId: i.string().optional(),
     }),
     messages: i.entity({
       role: i.string(),

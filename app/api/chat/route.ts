@@ -47,14 +47,11 @@ export async function POST(req: Request) {
       case 'openai':
         return createDataStreamResponse({
           execute: dataStream => {
-            dataStream.writeData({ hello: 'test' });
+            dataStream.writeMessageAnnotation({ model: model });
             const result = streamText({
               model: openai(modelId),
               messages: messages,
               temperature: 1,
-              onFinish() {
-                dataStream.writeMessageAnnotation({ model: model });
-              },
             });
             result.mergeIntoDataStream(dataStream);
           },
@@ -67,14 +64,11 @@ export async function POST(req: Request) {
       case 'anthropic':
         return createDataStreamResponse({
           execute: dataStream => {
-            dataStream.writeData({ hello: 'test' });
+            dataStream.writeMessageAnnotation({ model: model });
             const result = streamText({
               model: anthropic(modelId),
               messages: messages,
               temperature: 1,
-              onFinish() {
-                dataStream.writeMessageAnnotation({ model: model });
-              },
             });
             result.mergeIntoDataStream(dataStream);
           },
@@ -86,14 +80,11 @@ export async function POST(req: Request) {
       case 'google':
         return createDataStreamResponse({
           execute: dataStream => {
-            dataStream.writeData({ hello: 'test' });
+            dataStream.writeMessageAnnotation({ model: model });
             const result = streamText({
               model: google(modelId),
               messages: messages,
               temperature: 1,
-              onFinish() {
-                dataStream.writeMessageAnnotation({ model: model });
-              },
             });
             result.mergeIntoDataStream(dataStream);
           },
