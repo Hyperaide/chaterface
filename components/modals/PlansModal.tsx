@@ -14,7 +14,7 @@ export default function PlansModal() {
     redirectURL: window.location.href,
   });
   
-  const credits = sliderValue * 100;
+  const credits = sliderValue * 1000;
 
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full max-w-xl h-max absolute inset-0 mt-20 z-50 rounded-xl mx-auto">
@@ -52,8 +52,8 @@ export default function PlansModal() {
             autoFocus={false}
           />
           <div className="w-full flex justify-between text-[10px] text-sage-11">
-            <span>$5 (500 credits)</span>
-            <span>$100 (10,000 credits)</span>
+            <span>$5 (5,000 credits)</span>
+            <span>$100 (100,000 credits)</span>
           </div>
 
           <div className="w-full flex flex-row gap-2 justify-between items-center mt-2">

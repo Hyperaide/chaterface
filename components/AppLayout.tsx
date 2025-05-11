@@ -136,7 +136,7 @@ export default function AppLayout({
         <div className="flex flex-col gap-2 border bg-sage-1 dark:bg-sage-3 border-sage-4 dark:border-sage-5 rounded-md p-2 w-full mt-2">
           <div className="flex flex-row gap-1 items-center">
             <DiamondsFour size={12} weight="fill" className="text-teal-9 group-hover:text-sage-12 transition-colors duration-300" />
-            <NumberFlow value={user ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+            <NumberFlow value={user && profile?.credits ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
           </div>
 
           { user ? 

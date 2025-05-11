@@ -36,7 +36,7 @@ export async function POST(req: Request) {
       })
 
       await db.transact(db.tx.userProfiles[data.userProfiles[0].id].update({
-        credits: data.userProfiles[0].credits + session.amount_total,
+        credits: data.userProfiles[0].credits + (session.amount_total ? session.amount_total * 10 : 0),
         hasPurchasedCredits: true
       }));
 
