@@ -29,18 +29,16 @@ export default function ModelSelector({
 }: ModelSelectorProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [availableModels, setAvailableModels] = useState<any[]>([]);
-  const [limitedUse, setLimitedUse] = useState<boolean>(false);
   const references = useRef<Array<HTMLElement | null>>([]);
-  const {user} = useAuth();
+  const {user, profile} = useAuth();
   const {showModal} = useModal();
   useEffect(() => {
-    if(user && user.credits > 0) {
+    if(user && profile?.hasPurchasedCredits) {
       setAvailableModels(models);
     } else {
-      setLimitedUse(true);
       setAvailableModels(models.filter(model => model.free));
     }
-  }, [user]);
+  }, [user, profile]);
   
   const { refs, floatingStyles, context } = useFloating({
     open: isOpen,
@@ -158,7 +156,7 @@ export default function ModelSelector({
                 </motion.button>
               ))}
 
-              {limitedUse && (
+              {!profile?.hasPurchasedCredits && (
                 <div className="px-3 py-3 text-sm text-sage-11 hover:bg-sage-2 dark:hover:bg-sage-4 transition-colors cursor-pointer" onClick={() => {showModal(<PlansModal />)}}>
                   <p className="text-sage-12 font-medium text-xs">
                     Looking for more models?

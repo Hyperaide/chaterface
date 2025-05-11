@@ -47,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (!profile) {
           const profileId = id()
           await db.transact(db.tx.userProfiles[profileId].update({
-            credits: 0
+            credits: 200
           }).link({user: user?.id}))
         }
       }else{

@@ -67,7 +67,7 @@ export default function Home() {
     headers: {
       'Authorization': `Bearer ${getProviderKey(selectedModel)}`,
       'X-Session-Id': sessionId ?? '',
-      'X-Token': user?.refreshToken ?? ''
+      'X-Token': user?.refresh_token ?? ''
     },
     body: {
       model: selectedModel

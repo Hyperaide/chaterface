@@ -13,9 +13,8 @@ const _schema = i.schema({
     }),
     userProfiles: i.entity({
       credits: i.number(),
-      stripeCustomerId: i.string(),
       theme: i.string(),
-      stripeDetails: i.json(),
+      hasPurchasedCredits: i.boolean(),
     }),
     conversations: i.entity({
       name: i.string(),

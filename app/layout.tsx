@@ -39,11 +39,11 @@ export default function RootLayout({
             <KeyProvider>
               <NewConversationProvider>
                 <AuthProvider>
+                <ModalProvider>
                   <AppLayout>
-                  <ModalProvider>
                     {children}
-                  </ModalProvider>
                   </AppLayout>
+                </ModalProvider>
                 </AuthProvider>
               </NewConversationProvider>
             </KeyProvider>

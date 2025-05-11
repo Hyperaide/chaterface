@@ -11,9 +11,11 @@ import {
   useId,
   FloatingFocusManager
 } from '@floating-ui/react';
+import { useAuth } from '@/providers/auth-provider';
 
 export function ModalContainer() {
   const { isOpen, modal, hideModal } = useModal();
+  const { profile } = useAuth();
 
   // Add floating UI hooks
   const {refs, context} = useFloating({
@@ -42,7 +44,7 @@ export function ModalContainer() {
       {isOpen && (
         <>
           {/* Background */}
-          <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className="bg-sage-1/80 backdrop-blur h-screen w-screen absolute inset-0 z-20"></motion.div>
+          <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className={`bg-sage-1/80 backdrop-blur h-screen w-screen absolute inset-0 z-20 ${profile?.theme === 'dark' ? 'dark' : ''}`}></motion.div>
           {/* Modal */}
           <FloatingFocusManager context={context}>
             <div
@@ -51,7 +53,7 @@ export function ModalContainer() {
                 "aria-labelledby": labelId,
                 "aria-describedby": descriptionId
               })}
-              className="z-40"
+              className={`z-40 ${profile?.theme === 'dark' ? 'dark' : ''}`}
             >
               {modal}
             </div>

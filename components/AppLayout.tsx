@@ -2,7 +2,7 @@
 
 import Button from "@/components/button";
 import Logo from "@/components/logo";
-import { Plus, MoonStars, Sun, ArrowRight, SignOut, SignIn } from "@phosphor-icons/react";
+import { Plus, MoonStars, Sun, ArrowRight, SignOut, SignIn, DiamondsFour } from "@phosphor-icons/react";
 import { useAuth } from "@/providers/auth-provider";
 import { useDatabase } from "@/providers/database-provider";
 import { useEffect, useState } from "react";
@@ -12,6 +12,9 @@ import hotkeys from 'hotkeys-js';
 import { useCreateConversation } from "@/app/utils/conversation"
 import { AppSchema } from "@/instant.schema";
 import { InstaQLEntity } from "@instantdb/react";
+import NumberFlow from '@number-flow/react'
+import PlansModal from "./modals/PlansModal";
+import { useModal } from "@/providers/modal-provider";
 
 // Define the expected shape of a conversation based on AppSchema
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
@@ -26,7 +29,7 @@ export default function AppLayout({
   const [messageCount, setMessageCount] = useState<number>(0);
   const pathname = usePathname();
   const { createConversationAndRedirect } = useCreateConversation();
-
+  const { showModal } = useModal();
   // Determine the active conversation ID from the pathname
   const conversationId = pathname.startsWith('/conversations/') ? pathname.split('/').pop() : null;
 
@@ -117,46 +120,52 @@ export default function AppLayout({
               </button>
             )}
 
-            <button onClick={() => signOut()} className="p-1 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md group transition-colors duration-300">
-              <SignOut size={16} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
-            </button>
+            {user ? (
+              <button onClick={() => signOut()} className="p-1 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md group transition-colors duration-300">
+                <SignOut size={16} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
+              </button>
+            ) : (
+              <Link href={url} className="p-1 hover:bg-sage-3 dark:hover:bg-sage-4 rounded-md group transition-colors duration-300">
+                <SignIn size={16} weight="bold" className="text-sage-10 group-hover:text-sage-12 dark:text-sage-9 dark:group-hover:text-sage-11 transition-colors duration-300" />
+              </Link>
+            )}
           </div>
         </div>
         <Button onClick={createConversationAndRedirect} size="small" className="mt-2 w-full bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6" icon={<Plus size={16} weight="bold" />}>New Conversation</Button>
 
-        <div className="flex flex-col border bg-sage-1 dark:bg-sage-3 border-sage-4 dark:border-sage-5 rounded-md p-2 w-full mt-2">
-          <div className="flex flex-row gap-2 justify-between items-center" >
-            <p className="text-[10px] font-mono text-sage-11 dark:text-sage-11 uppercase">Usage </p>
-            <p className="text-[10px] font-mono text-sage-11 dark:text-sage-11"> {user ? messageCount + '/200' : messageCount + '/100'} </p>
-          </div>
-          <div className="relative h-1 w-full bg-sage-3 mt-1 dark:bg-sage-5 rounded-full">
-            <div className="h-1 bg-teal-9 rounded-full absolute left-0" style={{ width: `${messageCount }%` }}></div>
+        <div className="flex flex-col gap-2 border bg-sage-1 dark:bg-sage-3 border-sage-4 dark:border-sage-5 rounded-md p-2 w-full mt-2">
+          <div className="flex flex-row gap-1 items-center">
+            <DiamondsFour size={12} weight="fill" className="text-teal-9 group-hover:text-sage-12 transition-colors duration-300" />
+            <NumberFlow value={user ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
           </div>
 
-          {user ? (
-            <>
-              {/* <p className="text-xs text-sage-11 dark:text-sage-11 mt-4"> Upgrade for higher limits </p>
+          { user ? 
+          (
+            <div className="flex flex-col gap-1">
+              <p className="text-[11px] text-sage-11 dark:text-sage-11"> You have {profile?.credits} credits left. You can always buy more. </p>
               <div className="flex flex-row gap-1 items-center mt-1">
-                <Diamond size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
-                <Link href={'/plans'} className="text-xs text-sage-12 font-medium">Upgrade Plan</Link>
-              </div> */}
-            </>
+                {/* <SignIn size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" /> */}
+                <div onClick={() => {showModal(<PlansModal />)}} className="text-xs text-sage-12 font-medium hover:text-sage-12 transition-colors duration-300 hover:cursor-pointer">Get more credits</div>
+                <ArrowRight size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
+              </div>
+            </div>
           ) : (
-            <>
-              <p className="text-xs text-sage-11 dark:text-sage-11 mt-4"> Create Account for higher limits </p>
+            <div className="flex flex-col gap-1">
+              <p className="text-[11px] text-sage-11 dark:text-sage-11"> You have 100 credits left. Sign in to get get more free credits or upgrade to a paid plan. </p>
               <div className="flex flex-row gap-1 items-center mt-1">
                 <SignIn size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
                 <Link href={url} className="text-xs text-sage-12 font-medium">Sign in with Google</Link>
               </div>
-            </>
-          )}
-
-          {/* <Button onClick={() => router.push('/pricing')} size="small" className="mt-1 w-full bg-sage-2 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-4 dark:border-sage-6" icon={<User size={16} weight="bold" />}>Sign In</Button> */}
+            </div>
+          )
+          }
         </div>
+
+        
 
         {/* Conversation List */}
         <div className="gap-2 flex flex-col w-full mt-4 flex-1 overflow-y-auto">
-          <div className="flex flex-row items-center justify-between gap-2 sticky top-0 bg-sage-2 dark:bg-sage-1 pb-1">
+          <div className="flex flex-row items-center justify-between gap-2 sticky top-0 pb-1">
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11"> {conversations.length} </p>
           </div>

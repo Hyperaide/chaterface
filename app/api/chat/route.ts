@@ -3,6 +3,8 @@ import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { db } from '@/lib/instant-admin';
+import { tx } from '@instantdb/react';
+import { models } from '@/constants/models';
 
 export async function POST(req: Request) {
   try {
@@ -17,6 +19,7 @@ export async function POST(req: Request) {
 
     const sessionId = req.headers.get('X-Session-Id');
     const token = req.headers.get('X-Token');
+
 
     if(await checkUsage(sessionId, token)) {
       return new Response(JSON.stringify({ error: 'Usage limit reached' }), {
@@ -148,12 +151,26 @@ async function checkUsage(sessionId?: string | null, token?: string | null) {
           ]
         }
       }
+    },
+    userProfiles: {
+      $: {
+        where: {
+          'user.id': user?.id ?? ''
+        }
+      }
     }
   });
 
   // if user is logged in, check if they have used 200 messages
-  if(user && data.messages.length >= 200) {
+  if(user && data.userProfiles[0]?.credits && data.userProfiles[0]?.credits <= 0) {
     return true;
+  } else if(user && data.userProfiles[0]?.credits && data.userProfiles[0]?.credits > 0) {
+    const model = data.messages[data.messages.length - 1].model;
+    const modelData = models.find((m: any) => m.id === model);
+    console.log('decreasing credits');
+    await db.transact(db.tx.userProfiles[data.userProfiles[0].id].update({
+      credits: data.userProfiles[0]?.credits - (modelData?.creditCost ?? 1)
+    }));
   }
 
   // if user is not logged in, check if they have used 100 messages
