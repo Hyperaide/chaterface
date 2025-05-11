@@ -12,7 +12,7 @@ import {
 } from '@floating-ui/react';
 import { models } from "@/constants/models";
 import { motion } from "motion/react";
-import { CaretDown, Question, Sparkle } from "@phosphor-icons/react";
+import { CaretDown, DiamondsFour, Question, Sparkle } from "@phosphor-icons/react";
 import { useAuth } from '@/providers/auth-provider';
 import Link from 'next/link';
 import { useModal } from '@/providers/modal-provider';
@@ -79,7 +79,7 @@ export default function ModelSelector({
             ref={refs.setFloating}
             style={floatingStyles}
             {...getFloatingProps()}
-            className="bg-white dark:bg-sage-3 shadow-md border border-sage-4 dark:border-sage-5 rounded-md z-50 max-w-sm overflow-hidden"
+            className="bg-white dark:bg-sage-3 shadow-md border border-sage-4 dark:border-sage-5 rounded-md z-50 max-w-xl overflow-hidden"
           >
             <motion.div
               initial="closed"
@@ -122,6 +122,13 @@ export default function ModelSelector({
                         </p>
                       </div>
                     )}
+
+                    <div className="flex flex-row items-center gap-px">
+                      <DiamondsFour size={12} weight="fill" className="text-teal-9" />
+                      <p className="text-[11px] text-teal-11 dark:text-teal-5 font-medium">
+                        {model.creditCost}
+                      </p>
+                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 ml-auto">
@@ -152,6 +159,7 @@ export default function ModelSelector({
                       </div>
                 
                     </div>
+
                   </div>
                 </motion.button>
               ))}
