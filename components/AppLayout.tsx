@@ -6,7 +6,7 @@ import { Plus, MoonStars, Sun, ArrowRight, SignOut, SignIn, DiamondsFour, Credit
 import { useAuth } from "@/providers/auth-provider";
 import { useDatabase } from "@/providers/database-provider";
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import hotkeys from 'hotkeys-js';
 import { useCreateConversation } from "@/app/utils/conversation"
@@ -28,7 +28,8 @@ export default function AppLayout({
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messageCount, setMessageCount] = useState<number>(0);
   const pathname = usePathname();
-  const { createConversationAndRedirect } = useCreateConversation();
+  const router = useRouter();
+  // const { createConversationAndRedirect } = useCreateConversation();
   const { showModal } = useModal();
   // Determine the active conversation ID from the pathname
   const conversationId = pathname.startsWith('/conversations/') ? pathname.split('/').pop() : null;
@@ -75,14 +76,14 @@ export default function AppLayout({
       // Prevent triggering shortcut if focus is inside an input or textarea
       if (!(event.target instanceof HTMLTextAreaElement || event.target instanceof HTMLInputElement)) {
         event.preventDefault();
-        createConversationAndRedirect();
+        router.push('/');
       }
     });
 
     return () => {
       hotkeys.unbind('n');
     };
-  }, [createConversationAndRedirect]);
+  }, [router]);
 
   const signOut = () => {
     db.auth.signOut();
@@ -179,9 +180,9 @@ export default function AppLayout({
         <div className="w-full flex flex-col h-full relative">
           <div className="flex flex-row items-center justify-between gap-2 py-4">
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
-            <div onClick={createConversationAndRedirect} className="w-max bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6 rounded p-1 hover:cursor-pointer">
+            <Link href="/" className="w-max bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6 rounded p-1 hover:cursor-pointer">
               <Plus size={8} weight="bold" />
-            </div>
+            </Link>
           </div>
           <div className="flex flex-col w-full overflow-y-auto gap-1 relative">
           
