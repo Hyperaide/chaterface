@@ -186,6 +186,10 @@ async function useCredits(model: string, sessionId?: string | null, token?: stri
     user = await db.auth.verifyToken(token);
   }
 
+  if(!user) {
+    return;
+  }
+
   const data = await db.query({
     messages: {
       $: {

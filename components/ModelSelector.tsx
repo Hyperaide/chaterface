@@ -163,7 +163,7 @@ export default function ModelSelector({
                     Looking for more models?
                   </p>
                   <p className="text-sage-11 text-xs">
-                    Upgrade to a paid plan to unlock all models.
+                    You need to purchase credits to unlock all models.
                   </p>
                 </div>
               )}

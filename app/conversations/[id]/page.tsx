@@ -33,7 +33,7 @@ export default function ConversationPage() {
 
 
   const router = useRouter();
-  const { isLoading, data, error } = db.useQuery({
+  const { data } = db.useQuery({
     conversations: {
       $: {
         where: { id: id as string }
@@ -56,7 +56,12 @@ export default function ConversationPage() {
             }
           }
         }
-      })
+      },
+      {
+        ruleParams: {
+          sessionId: sessionId ?? ''
+        }
+      });
 
       setInitialMessages(messagesOnDB.data.messages.map((message) => ({
         role: message.role as "data" | "system" | "user" | "assistant",

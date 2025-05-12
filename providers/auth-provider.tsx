@@ -5,6 +5,7 @@ import { init, id, i } from '@instantdb/react';
 import { Homepage } from '../components/Homepage';
 import Pricing from '@/components/Pricing';
 import Cookies from 'js-cookie';
+import { CircleNotch } from '@phosphor-icons/react';
 
 const APP_ID = process.env.NEXT_PUBLIC_INSTANT_APP_ID || '';
 
@@ -82,7 +83,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [profileData])
 
   if (isLoading) {
-    return <div>Loading authentication state...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <CircleNotch size={24} weight="bold" className="animate-spin" />
+      </div>
+    )
   }
   if (error) {
     return <div>Authentication Error: {error.message}</div>;

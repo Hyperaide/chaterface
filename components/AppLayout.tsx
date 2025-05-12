@@ -39,7 +39,6 @@ export default function AppLayout({
       $: {
         where: {
           or: [{ 'user.id': user?.id ?? '' }, { sessionId: sessionId ?? '' }],
-
         },
         order: { createdAt: "desc" }
       },
@@ -139,7 +138,12 @@ export default function AppLayout({
           <div className="flex flex-row gap-2 items-center justify-between pb-2">
             <div className="flex flex-row gap-1 items-center">
               <DiamondsFour size={12} weight="fill" className="text-teal-9 group-hover:text-sage-12 transition-colors duration-300" />
-              <NumberFlow value={user && profile?.credits ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+
+              {user ? (
+                <NumberFlow value={user && profile?.credits ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+              ) : (
+                <NumberFlow value={100 - messageCount} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+              )}
             </div>
             { user ?
             (
