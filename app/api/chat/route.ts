@@ -52,8 +52,8 @@ export async function POST(req: Request) {
               model: openai(modelId),
               messages: messages,
               temperature: 1,
-              onFinish(data) {
-                useCredits(model, sessionId, token, data.usage);
+              onFinish: async (data) => {
+                await useCredits(model, sessionId, token, data.usage);
                 dataStream.writeMessageAnnotation({ creditsConsumed: calculateCreditCost(model, data.usage) });
               },
             });
