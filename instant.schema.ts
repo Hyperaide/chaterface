@@ -26,6 +26,7 @@ const _schema = i.schema({
       content: i.string(),
       createdAt: i.date(),
       model: i.string(),
+      creditsConsumed: i.number().optional(),
     }),
   },
   links: {

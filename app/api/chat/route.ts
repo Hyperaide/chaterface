@@ -4,7 +4,7 @@ import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { db } from '@/lib/instant-admin';
 import { tx } from '@instantdb/react';
-import { models } from '@/constants/models';
+import { models, modelPricing, calculateCreditCost } from '@/constants/models';
 
 export async function POST(req: Request) {
   try {
@@ -52,6 +52,10 @@ export async function POST(req: Request) {
               model: openai(modelId),
               messages: messages,
               temperature: 1,
+              onFinish(data) {
+                useCredits(model, sessionId, token, data.usage);
+                dataStream.writeMessageAnnotation({ creditsConsumed: calculateCreditCost(model, data.usage) });
+              },
             });
             result.mergeIntoDataStream(dataStream);
           },
@@ -69,6 +73,9 @@ export async function POST(req: Request) {
               model: anthropic(modelId),
               messages: messages,
               temperature: 1,
+              onFinish() {
+                useCredits(model, sessionId, token);
+              },
             });
             result.mergeIntoDataStream(dataStream);
           },
@@ -85,6 +92,9 @@ export async function POST(req: Request) {
               model: google(modelId),
               messages: messages,
               temperature: 1,
+              onFinish() {
+                useCredits(model, sessionId, token);
+              },
             });
             result.mergeIntoDataStream(dataStream);
           },
@@ -155,13 +165,6 @@ async function checkUsage(sessionId?: string | null, token?: string | null) {
   // if user is logged in, check if they have used 200 messages
   if(user && data.userProfiles[0]?.credits && data.userProfiles[0]?.credits <= 0) {
     return true;
-  } else if(user && data.userProfiles[0]?.credits && data.userProfiles[0]?.credits > 0) {
-    const model = data.messages[data.messages.length - 1].model;
-    const modelData = models.find((m: any) => m.id === model);
-    console.log('decreasing credits');
-    await db.transact(db.tx.userProfiles[data.userProfiles[0].id].update({
-      credits: data.userProfiles[0]?.credits - (modelData?.creditCost ?? 1)
-    }));
   }
 
   // if user is not logged in, check if they have used 100 messages
@@ -170,4 +173,40 @@ async function checkUsage(sessionId?: string | null, token?: string | null) {
   }
 
   return false;
+}
+
+async function useCredits(model: string, sessionId?: string | null, token?: string | null, usage?: any) {
+  if (!sessionId && !token) {
+    return;
+  }
+
+  let user;
+
+  if(token) {
+    user = await db.auth.verifyToken(token);
+  }
+
+  const data = await db.query({
+    messages: {
+      $: {
+        where: {
+          or: [
+            { 'conversation.sessionId': sessionId ?? '' },
+            { 'conversation.user.id': user?.id ?? '' }
+          ]
+        }
+      }
+    },
+    userProfiles: {
+      $: {
+        where: {
+          'user.id': user?.id ?? ''
+        }
+      }
+    }
+  });
+
+  await db.transact(db.tx.userProfiles[data.userProfiles[0].id].update({
+    credits: data.userProfiles[0]?.credits - calculateCreditCost(model, usage)
+  }));
 }

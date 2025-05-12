@@ -11,9 +11,6 @@ type Message = InstaQLEntity<AppSchema, "messages">;
 export default function MessageList({ messages, messagesOnDB }: { messages: UIMessage[], messagesOnDB: Message[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  console.log("messagesOnDB", messagesOnDB);
-  console.log("messages", messages);
-
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messagesOnDB]);
@@ -24,8 +21,8 @@ export default function MessageList({ messages, messagesOnDB }: { messages: UIMe
     animate={{ opacity: 1 }}
     transition={{ duration: 0.3 }}
     >
-      {messages.map((message) => (
-        <Message key={message.id} message={message} />
+      {messages.map((message, index) => (
+        <Message key={index} message={message} annotations={message.annotations} />
       ))}
       <div ref={messagesEndRef} />
     </motion.div>

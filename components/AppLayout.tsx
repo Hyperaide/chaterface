@@ -2,7 +2,7 @@
 
 import Button from "@/components/button";
 import Logo from "@/components/logo";
-import { Plus, MoonStars, Sun, ArrowRight, SignOut, SignIn, DiamondsFour } from "@phosphor-icons/react";
+import { Plus, MoonStars, Sun, ArrowRight, SignOut, SignIn, DiamondsFour, CreditCard, GithubLogo, Book } from "@phosphor-icons/react";
 import { useAuth } from "@/providers/auth-provider";
 import { useDatabase } from "@/providers/database-provider";
 import { useEffect, useState } from "react";
@@ -131,45 +131,81 @@ export default function AppLayout({
             )}
           </div>
         </div>
-        <Button onClick={createConversationAndRedirect} size="small" className="mt-2 w-full bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6" icon={<Plus size={16} weight="bold" />}>New Conversation</Button>
+        {/* <Button onClick={createConversationAndRedirect} size="small" className="mt-2 w-full bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6" icon={<Plus size={16} weight="bold" />}>New Conversation</Button> */}
 
-        <div className="flex flex-col gap-2 border bg-sage-1 dark:bg-sage-3 border-sage-4 dark:border-sage-5 rounded-md p-2 w-full mt-2">
-          <div className="flex flex-row gap-1 items-center">
-            <DiamondsFour size={12} weight="fill" className="text-teal-9 group-hover:text-sage-12 transition-colors duration-300" />
-            <NumberFlow value={user && profile?.credits ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+        
+
+        <div className="flex flex-col gap-2 border bg-white dark:bg-sage-2 border-sage-3 dark:border-sage-3 rounded-md p-2 w-full mt-1 divide-y divide-sage-3">
+          <div className="flex flex-row gap-2 items-center justify-between pb-2">
+            <div className="flex flex-row gap-1 items-center">
+              <DiamondsFour size={12} weight="fill" className="text-teal-9 group-hover:text-sage-12 transition-colors duration-300" />
+              <NumberFlow value={user && profile?.credits ? profile?.credits : 100} className="text-xs font-semibold text-sage-12 dark:text-sage-12" />
+            </div>
+            { user ?
+            (
+              <div className="flex flex-row gap-1 items-center bg-sage-2 dark:bg-sage-3 dark:boder-sage-2 dark:hover:bg-sage-4  hover:border-sage-5 transition-colors duration-300 border border-sage-5 rounded-md p-1 px-2">
+                <CreditCard size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
+                <div onClick={() => {showModal(<PlansModal />)}} className="text-[11px] text-sage-12 font-medium hover:text-sage-12 transition-colors duration-300 hover:cursor-pointer">Add credits</div>
+            
+              </div>
+            ) : null }
           </div>
 
-          { user ? 
-          (
-            <div className="flex flex-col gap-1">
-              <p className="text-[11px] text-sage-11 dark:text-sage-11"> You have {profile?.credits} credits left. You can always buy more. </p>
-              <div className="flex flex-row gap-1 items-center mt-1">
-                {/* <SignIn size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" /> */}
-                <div onClick={() => {showModal(<PlansModal />)}} className="text-xs text-sage-12 font-medium hover:text-sage-12 transition-colors duration-300 hover:cursor-pointer">Get more credits</div>
-                <ArrowRight size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
-              </div>
+          <div className="flex flex-col gap-2">
+            <p className="text-xs text-sage-10 dark:text-sage-10">Chaterface is a fully open source project by <Link href="https://x.com/dqnamo" target="_blank" className="font-medium text-sage-11 hover:text-sage-12 transition-colors duration-300">@dqnamo</Link> and <Link href="https://x.com/hyperaide" target="_blank" className="font-medium text-sage-11 hover:text-sage-12 transition-colors duration-300">Hyperaide</Link>.</p>
+            <div className="flex flex-wrap w-full gap-2">
+              <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group bg-sage-2 dark:bg-sage-4 hover:bg-sage-5 hover:border-sage-6 transition-colors duration-300 border border-sage-5 rounded-md p-1 px-2">
+                <GithubLogo size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
+                <p className="text-xs text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Github</p>
+                {/* <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" /> */}
+              </Link>
+              <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group bg-sage-2 dark:bg-sage-4 hover:bg-sage-5 hover:border-sage-6 transition-colors duration-300 border border-sage-5 rounded-md p-1 px-2">
+                <Book size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
+                <p className="text-xs text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Docs</p>
+            
+              </Link>
             </div>
-          ) : (
-            <div className="flex flex-col gap-1">
-              <p className="text-[11px] text-sage-11 dark:text-sage-11"> You have 100 credits left. Sign in to get get more free credits or upgrade to a paid plan. </p>
-              <div className="flex flex-row gap-1 items-center mt-1">
-                <SignIn size={12} weight="bold" className="text-sage-12 group-hover:text-sage-12 transition-colors duration-300" />
-                <Link href={url} className="text-xs text-sage-12 font-medium">Sign in with Google</Link>
-              </div>
-            </div>
-          )
-          }
+          </div>
+
         </div>
 
         
 
         {/* Conversation List */}
-        <div className="gap-2 flex flex-col w-full mt-4 flex-1 overflow-y-auto">
+        <div className="w-full flex flex-col h-full relative">
+          <div className="flex flex-row items-center justify-between gap-2 py-4">
+            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
+            <div onClick={createConversationAndRedirect} className="w-max bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6 rounded p-1 hover:cursor-pointer">
+              <Plus size={10} weight="bold" />
+            </div>
+          </div>
+          <div className="flex flex-col w-full overflow-y-auto gap-1 relative">
+          
+            {conversations.map(conv => (
+              <div className="w-full flex">
+                <Link
+                  key={conv.id}
+                  href={`/conversations/${conv.id}`}
+                  className={`text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
+                >
+                  {conv.name}
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+
+
+
+
+        {/* <div className="gap-2 flex flex-col w-full mt-4 flex-1 overflow-y-auto">
           <div className="flex flex-row items-center justify-between gap-2 sticky top-0 pb-1">
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11"> {conversations.length} </p>
           </div>
-          <div className="flex flex-col w-full gap-px">
+          <div className="flex flex-col w-full gap-px relative">
+            <div className="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-sage-1 to-transparent p-2"/>
+
             {conversations.map(conv => (
               <Link
                 key={conv.id}
@@ -181,18 +217,7 @@ export default function AppLayout({
               </Link>
             ))}
           </div>
-        </div>
-
-        <div className="flex flex-col w-full mt-auto gap-2 py-4">
-          <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group">
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">View Github Repo</p>
-            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
-          </Link>
-          <Link href="https://x.com/dqnamo" target="_blank" className="flex flex-row items-center gap-1 group">
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Made by @dqnamo</p>
-            <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
-          </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Main Content Area */}

@@ -122,13 +122,6 @@ export default function ModelSelector({
                         </p>
                       </div>
                     )}
-
-                    <div className="flex flex-row items-center gap-px">
-                      <DiamondsFour size={12} weight="fill" className="text-teal-9" />
-                      <p className="text-[11px] text-teal-11 dark:text-teal-5 font-medium">
-                        {model.creditCost}
-                      </p>
-                    </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 ml-auto">

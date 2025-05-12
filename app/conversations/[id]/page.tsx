@@ -13,7 +13,7 @@ import MessageList from "@/components/MessageList";
 import NewMessageInput from "@/components/NewMessageInput";
 import { UIMessage } from "ai";
 import { useNewConversation } from "@/providers/new-conversation-provider";
-import { models } from "@/constants/models";
+import { calculateCreditCost, models } from "@/constants/models";
 import { useAuth } from "@/providers/auth-provider";
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
 type Message = InstaQLEntity<AppSchema, "messages">;
@@ -26,9 +26,12 @@ export default function ConversationPage() {
   const { getProviderKey } = useKey();
   const { user, sessionId } = useAuth();
   const [selectedModel, setSelectedModel] = useState<string>(models[0].id);
-  const [messagesForChat, setMessagesForChat] = useState<UIMessage[]>([]);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const [initialMessages, setInitialMessages] = useState<any[]>([]);
+
+
   const router = useRouter();
   const { isLoading, data, error } = db.useQuery({
     conversations: {
@@ -43,12 +46,42 @@ export default function ConversationPage() {
     }
   });
 
+  useEffect(() => {
+    async function getMessagesOnDB() {
+      const messagesOnDB = await db.queryOnce({
+        messages: {
+          $: {
+            where: {
+              conversation: id as string
+            }
+          }
+        }
+      })
+
+      setInitialMessages(messagesOnDB.data.messages.map((message) => ({
+        role: message.role as "data" | "system" | "user" | "assistant",
+        content: message.content,
+        id: message.id,
+        parts: [{
+          type: "text",
+          text: message.content
+        }],
+        annotations: [
+          { model: message.model },
+          { creditsConsumed: message.creditsConsumed ?? 0 }
+        ]
+      })));
+    }
+
+    getMessagesOnDB();
+  }, []);
+
   const { messages, input, handleInputChange, append, setInput, status } = useChat({
     api: '/api/chat',
     headers: {
       'Authorization': `Bearer ${getProviderKey(selectedModel)}`,
       'X-Session-Id': sessionId ?? '',
-      'X-Token': user?.refresh_token ?? ''
+      'X-Token': user?.refresh_token ?? '',
     },
     body: {
       model: selectedModel
@@ -57,28 +90,18 @@ export default function ConversationPage() {
       setIsProcessing(false);
       setErrorMessage(error.message);
     },
-    onFinish: async (message) => {
+    onFinish: async (message, options) => {
       setIsProcessing(false);
       const aiMessageId = newInstantId();
       await db.transact(db.tx.messages[aiMessageId].ruleParams({ sessionId: sessionId ?? '' }).update({
         content: message.content,
         role: "assistant",
         createdAt: DateTime.now().toISO(),
-        model: selectedModel
+        model: selectedModel,
+        creditsConsumed: calculateCreditCost(selectedModel, options.usage)
       }).link({ conversation: id as string }));
     },
-    initialMessages: data?.conversations[0]?.messages.map((message) => ({
-      role: message.role as "data" | "system" | "user" | "assistant",
-      content: message.content,
-      id: message.id,
-      parts: [{
-        type: "text",
-        text: message.content
-      }],
-      annotations: [{
-        model: message.model
-      }]
-    })) ?? []
+    initialMessages: initialMessages
   });
 
 
