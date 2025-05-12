@@ -19,6 +19,7 @@ import { useChat } from "@ai-sdk/react";
 import { useAuth } from "@/providers/auth-provider";
 import { AppSchema } from "@/instant.schema";
 import MessageList from "@/components/MessageList";
+import { startBackgroundJob } from "@/lib/background-jobs";
 const lora = Lora({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -129,6 +130,11 @@ export default function Home() {
         createdAt: DateTime.now().toISO(),
         model: selectedModel
       }).link({ conversation: generatedNewConversationId }));
+
+      await startBackgroundJob(`${window.location.origin}/api/name-conversation`, {
+        conversationId: generatedNewConversationId,
+        firstMessageContent: content
+      });
     }else{
       await db.transact(db.tx.messages[id()].ruleParams({ sessionId: sessionId }).update({
         content: content,
