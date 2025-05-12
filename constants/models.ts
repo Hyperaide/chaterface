@@ -7,9 +7,11 @@ export const models = [
     { id: 'openai/o3', name: 'o3', speed: 130, intelligence: 72 },
     { id: 'openai/o4-mini', name: 'o4 Mini', speed: 139, intelligence: 70 },
     // { id: 'anthropic/claude-3-5-sonnet', name: 'Claude 3.5 Sonnet', speed: 77, intelligence: 44, creditCost: 1 },
-    { id: 'anthropic/claude-3-7-sonnet', name: 'Claude 3.7 Sonnet', speed: 76, intelligence: 57 },
+    { id: 'anthropic/claude-3-7-sonnet-20250219', name: 'Claude 3.7 Sonnet', speed: 76, intelligence: 57 },
     { id: 'google/gemini-2.0-flash', name: 'Gemini 2.0 Flash', speed: 250, intelligence: 48, free: true },
     { id: 'google/gemini-2.5-pro-exp-03-25', name: 'Gemini 2.5 Pro Experimental', speed: 162, intelligence: 68 },
+    { id: 'xai/grok-3', name: 'Grok 3', speed: 80, intelligence: 51, isNew: true },
+    { id: 'xai/grok-3-mini', name: 'Grok 3 Mini', speed: 115, intelligence: 67, isNew: true },
   ];
 
 
@@ -34,8 +36,27 @@ export const modelPricing = {
   "openai/o4-mini": {
     "input": 1.10,
     "output": 4.40
+  },
+  "anthropic/claude-3-7-sonnet-20250219": {
+    "input": 3.00,
+    "output": 15.00
+  },
+  "google/gemini-2.0-flash": {
+    "input": 0.15,
+    "output": 0.60
+  },
+  "google/gemini-2.5-pro-exp-03-25": {
+    "input": 2.50,
+    "output": 15.00
+  },
+  "xai/grok-3": {
+    "input": 3.00,
+    "output": 15.00
+  },
+  "xai/grok-3-mini": {
+    "input": 0.30,
+    "output": 0.50
   }
-
 }
 
 export const calculateCreditCost = (model: string, usage: any) => {

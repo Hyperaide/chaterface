@@ -2,6 +2,7 @@ import { streamText, CoreMessage, createDataStreamResponse } from 'ai';
 import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
+import { xai } from '@ai-sdk/xai';
 import { db } from '@/lib/instant-admin';
 import { tx } from '@instantdb/react';
 import { models, modelPricing, calculateCreditCost } from '@/constants/models';
@@ -41,72 +42,41 @@ export async function POST(req: Request) {
 
     const [provider, modelId] = model.split('/');
 
-    let result;
+    const createProviderStream = (providerModel: any) => {
+      return createDataStreamResponse({
+        execute: dataStream => {
+          dataStream.writeMessageAnnotation({ model });
+          const result = streamText({
+            model: providerModel(modelId),
+            messages,
+            temperature: 1,
+            onFinish: async (data) => {
+              await useCredits(model, sessionId, token, data.usage);
+              dataStream.writeMessageAnnotation({ creditsConsumed: calculateCreditCost(model, data.usage) });
+            },
+          });
+          result.mergeIntoDataStream(dataStream);
+        },
+        onError: (error: any) => {
+          console.error(error);
+          return `An error occurred with ${provider}`;
+        }
+      });
+    };
 
     switch (provider) {
       case 'openai':
-        return createDataStreamResponse({
-          execute: dataStream => {
-            dataStream.writeMessageAnnotation({ model: model });
-            const result = streamText({
-              model: openai(modelId),
-              messages: messages,
-              temperature: 1,
-              onFinish: async (data) => {
-                await useCredits(model, sessionId, token, data.usage);
-                dataStream.writeMessageAnnotation({ creditsConsumed: calculateCreditCost(model, data.usage) });
-              },
-            });
-            result.mergeIntoDataStream(dataStream);
-          },
-          onError: (error) => {
-            // You might want more specific error handling here
-            return "An error occurred with OpenAI";
-          },
-        });
-
+        return createProviderStream(openai);
       case 'anthropic':
-        return createDataStreamResponse({
-          execute: dataStream => {
-            dataStream.writeMessageAnnotation({ model: model });
-            const result = streamText({
-              model: anthropic(modelId),
-              messages: messages,
-              temperature: 1,
-              onFinish() {
-                useCredits(model, sessionId, token);
-              },
-            });
-            result.mergeIntoDataStream(dataStream);
-          },
-          onError: (error) => {
-            return "An error occurred with Anthropic";
-          },
-        });
-
+        return createProviderStream(anthropic);
       case 'google':
-        return createDataStreamResponse({
-          execute: dataStream => {
-            dataStream.writeMessageAnnotation({ model: model });
-            const result = streamText({
-              model: google(modelId),
-              messages: messages,
-              temperature: 1,
-              onFinish() {
-                useCredits(model, sessionId, token);
-              },
-            });
-            result.mergeIntoDataStream(dataStream);
-          },
-          onError: (error) => {
-            return "An error occurred with Google";
-          },
-        });
-
+        return createProviderStream(google);
+      case 'xai':
+        return createProviderStream(xai);
       default:
         return new Response(JSON.stringify({ error: `Unsupported provider: ${provider}` }), {
-            status: 400,
-            headers: { 'Content-Type': 'application/json' }
+          status: 400,
+          headers: { 'Content-Type': 'application/json' }
         });
     }
 
