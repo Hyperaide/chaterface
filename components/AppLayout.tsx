@@ -176,7 +176,7 @@ export default function AppLayout({
           <div className="flex flex-row items-center justify-between gap-2 py-4">
             <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
             <div onClick={createConversationAndRedirect} className="w-max bg-sage-3 text-sage-11 hover:bg-sage-4 dark:bg-sage-3 dark:text-sage-11 dark:hover:bg-sage-4 duration-300 border border-sage-6 dark:border-sage-6 rounded p-1 hover:cursor-pointer">
-              <Plus size={10} weight="bold" />
+              <Plus size={8} weight="bold" />
             </div>
           </div>
           <div className="flex flex-col w-full overflow-y-auto gap-1 relative">
