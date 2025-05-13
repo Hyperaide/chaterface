@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 @import "@radix-ui/colors/cyan.css";
 @import "@radix-ui/colors/slate.css";
 @import "@radix-ui/colors/sage-dark.css";

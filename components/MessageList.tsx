@@ -6,25 +6,32 @@ import Message from "./message";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 
-type Message = InstaQLEntity<AppSchema, "messages">;
+type MessageEntityType = InstaQLEntity<AppSchema, "messages">;
 
-export default function MessageList({ messages, messagesOnDB }: { messages: UIMessage[], messagesOnDB: Message[] }) {
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+export default function MessageList({ messages, messagesOnDB }: { messages: UIMessage[], messagesOnDB: MessageEntityType[] }) {
+  const lastMessageRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messagesOnDB]);
+    const lastMessage = messages[messages.length - 1];
+    if (lastMessageRef.current && lastMessage && lastMessage.role === "user") {
+      lastMessageRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }, [messages]);
 
   return (
-    <motion.div className="flex flex-col gap-4 w-full max-w-4xl mx-auto overflow-y-auto pb-40"
+    <motion.div className="flex flex-col gap-4 w-full max-w-4xl mx-auto overflow-y-auto pb-[80vh]"
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ duration: 0.3 }}
     >
       {messages.map((message, index) => (
-        <Message key={index} message={message} annotations={message.annotations} />
+        <Message 
+          key={index} 
+          message={message} 
+          annotations={message.annotations} 
+          ref={index === messages.length - 1 ? lastMessageRef : null} 
+        />
       ))}
-      <div ref={messagesEndRef} />
     </motion.div>
   );
 }
