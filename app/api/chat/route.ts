@@ -21,8 +21,24 @@ export async function POST(req: Request) {
     const sessionId = req.headers.get('X-Session-Id');
     const token = req.headers.get('X-Token');
 
+    let user; let userProfile: any;
 
-    if(await checkUsage(sessionId, token)) {
+    if(token) {
+      user = await db.auth.verifyToken(token);
+      userProfile = await db.query({
+        userProfiles: {
+          $: {
+            where: {
+              'user.id': user?.id ?? ''
+            }
+          }
+        }
+      }).then((data) => {
+        return data.userProfiles[0];
+      });
+    }
+
+    if(await usageLimitReached(sessionId, user)) {
       return new Response(JSON.stringify({ error: 'Usage limit reached' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
@@ -51,7 +67,7 @@ export async function POST(req: Request) {
             messages,
             temperature: 1,
             onFinish: async (data) => {
-              await useCredits(model, sessionId, token, data.usage);
+              await useCredits(model, userProfile, data.usage);
               dataStream.writeMessageAnnotation({ creditsConsumed: calculateCreditCost(model, data.usage) });
             },
           });
@@ -97,19 +113,9 @@ export async function POST(req: Request) {
   }
 } 
 
-
-async function checkUsage(sessionId?: string | null, token?: string | null) {
-  if (!sessionId && !token) {
+async function usageLimitReached(sessionId?: string | null, user?: any | null, userProfile?: any | null) {
+  if (!sessionId && !user) {
     return true;
-  }
-
-  let user;
-
-  if(token) {
-    user = await db.auth.verifyToken(token);
-    if(!user) {
-      return true;
-    }
   }
 
   const data = await db.query({
@@ -123,17 +129,10 @@ async function checkUsage(sessionId?: string | null, token?: string | null) {
         }
       }
     },
-    userProfiles: {
-      $: {
-        where: {
-          'user.id': user?.id ?? ''
-        }
-      }
-    }
   });
 
   // if user is logged in, check if they have used 200 messages
-  if(user && data.userProfiles[0]?.credits && data.userProfiles[0]?.credits <= 0) {
+  if(user && userProfile?.credits && userProfile?.credits <= 0) {
     return true;
   }
 
@@ -145,42 +144,12 @@ async function checkUsage(sessionId?: string | null, token?: string | null) {
   return false;
 }
 
-async function useCredits(model: string, sessionId?: string | null, token?: string | null, usage?: any) {
-  if (!sessionId && !token) {
+async function useCredits(model: string, userProfile: any, usage?: any) {
+  if(!userProfile) {
     return;
   }
 
-  let user;
-
-  if(token) {
-    user = await db.auth.verifyToken(token);
-  }
-
-  if(!user) {
-    return;
-  }
-
-  const data = await db.query({
-    messages: {
-      $: {
-        where: {
-          or: [
-            { 'conversation.sessionId': sessionId ?? '' },
-            { 'conversation.user.id': user?.id ?? '' }
-          ]
-        }
-      }
-    },
-    userProfiles: {
-      $: {
-        where: {
-          'user.id': user?.id ?? ''
-        }
-      }
-    }
-  });
-
-  await db.transact(db.tx.userProfiles[data.userProfiles[0].id].update({
-    credits: data.userProfiles[0]?.credits - calculateCreditCost(model, usage)
+  await db.transact(db.tx.userProfiles[userProfile.id].update({
+    credits: userProfile?.credits - calculateCreditCost(model, usage)
   }));
 }
