@@ -4,7 +4,7 @@ import Button from '@/components/button';
 import Logo from '@/components/logo';
 import { Lora } from "next/font/google";
 import { GithubLogo, ChatTeardropDots, Gear } from "@phosphor-icons/react/dist/ssr";
-import { Code, User } from '@phosphor-icons/react';
+import { Code, DiamondsFour, User } from '@phosphor-icons/react';
 
 const lora = Lora({
   subsets: ["latin"],
@@ -76,27 +76,38 @@ const IntroductionModal: React.FC = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 px-2 pb-2">
-              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
-                <div className="flex items-center gap-1 mb-1">
-                  <GithubLogo size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-semibold text-sage-12">Open Source</h3>
-                </div>
-                <p className="text-xs text-sage-11">
-                  Host it yourself or contribute to the project. It's fully open-source.
-                </p>
-                <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="mt-2 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-5" icon={<Code size={14} weight="bold" />}>View Code</Button>
-              </div>
-
+              
               <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
                 <div className="flex items-center gap-1 mb-1">
                   <ChatTeardropDots size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-semibold text-sage-12">Unified Interface</h3>
+                  <h3 className="text-sm font-medium text-sage-12">Unified Interface</h3>
                 </div>
                 <p className="text-xs text-sage-11">
                   Access leading models from OpenAI, Anthropic, and Google all in one consistent chat interface.
                 </p>
               </div>
+              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
+                <div className="flex items-center gap-1 mb-1">
+                  <DiamondsFour size={16} weight="fill" className="text-sage-12"/>
+                  <h3 className="text-sm font-medium text-sage-12">Credit Based Pricing</h3>
+                </div>
+                <p className="text-xs text-sage-11">
+                  No need to get locked in to a monthly subscription. Just pay for what you need. 
+                </p>
+              </div>
+
+              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg col-span-2">
+                <div className="flex items-center gap-1 mb-1">
+                  <GithubLogo size={16} weight="bold" className="text-sage-12"/>
+                  <h3 className="text-sm font-medium text-sage-12">Open Source</h3>
+                </div>
+                <p className="text-xs text-sage-11">
+                  Host it yourself or contribute to the project. It's fully open-source.
+                </p>
+                <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="w-max mt-2 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-5" icon={<Code size={14} weight="bold" />}>View Code</Button>
+              </div>
             </div>
+
           </motion.div>
         </motion.div>
       )}
