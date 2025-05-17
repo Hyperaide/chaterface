@@ -15,6 +15,7 @@ import { InstaQLEntity } from "@instantdb/react";
 import NumberFlow from '@number-flow/react'
 import PlansModal from "./modals/PlansModal";
 import { useModal } from "@/providers/modal-provider";
+import { DateTime } from "luxon";
 
 // Define the expected shape of a conversation based on AppSchema
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
@@ -184,45 +185,31 @@ export default function AppLayout({
               <Plus size={8} weight="bold" />
             </Link>
           </div>
-          <div className="flex flex-col w-full overflow-y-auto gap-1 relative">
+          <div className="flex flex-col w-full overflow-y-auto gap-px relative">
           
-            {conversations.map(conv => (
-              <div className="w-full flex">
-                <Link
-                  key={conv.id}
-                  href={`/conversations/${conv.id}`}
-                  className={`text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
-                >
-                  {conv.name}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-
-
-
-
-        {/* <div className="gap-2 flex flex-col w-full mt-4 flex-1 overflow-y-auto">
-          <div className="flex flex-row items-center justify-between gap-2 sticky top-0 pb-1">
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11">Conversations</p>
-            <p className="text-xs font-mono px-2 text-sage-11 dark:text-sage-11"> {conversations.length} </p>
-          </div>
-          <div className="flex flex-col w-full gap-px relative">
-            <div className="absolute top-0 left-0 w-full h-10 bg-gradient-to-b from-sage-1 to-transparent p-2"/>
-
             {conversations.map(conv => (
               <Link
                 key={conv.id}
                 href={`/conversations/${conv.id}`}
-                className={`text-sm px-2 py-1 rounded-md hover:bg-sage-3 dark:hover:bg-sage-4 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-4 dark:bg-sage-5 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
-                title={conv.name}
+                className={`flex flex-col justify-between text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
               >
-                {conv.name}
+                <p className="truncate">{conv.name}</p>
+                <p className="text-xs text-sage-10 dark:text-sage-10">{DateTime.fromISO(conv.createdAt as string).toRelative()}</p>
               </Link>
+
+
+              // <div className="w-full flex">
+              //   <Link
+              //     key={conv.id}
+              //     href={`/conversations/${conv.id}`}
+              //     className={`text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
+              //   >
+              //     {conv.name}
+              //   </Link>
+              // </div>
             ))}
           </div>
-        </div> */}
+        </div>
       </div>
 
       {/* Main Content Area */}

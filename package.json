@@ -28,7 +28,7 @@
     "elevenlabs": "^1.56.1",
     "hotkeys-js": "^3.13.9",
     "js-cookie": "^3.0.5",
-    "luxon": "^3.6.0",
+    "luxon": "^3.6.1",
     "motion": "^12.6.2",
     "next": "15.2.3",
     "posthog-js": "^1.234.4",
