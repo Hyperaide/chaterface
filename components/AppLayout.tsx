@@ -100,9 +100,9 @@ export default function AppLayout({
   });
 
   return (
-    <div className={`flex flex-row h-dvh w-full overflow-hidden bg-sage-1 dark:bg-sage-1 ${profile?.theme === 'dark' ? 'dark' : ''}`}>
+    <div className={`flex flex-col md:flex-row h-dvh w-full overflow-hidden bg-sage-1 dark:bg-sage-1 ${profile?.theme === 'dark' ? 'dark' : ''}`}>
       {/* Sidebar */}
-      <div className="flex flex-col p-2 overflow-y-auto items-start w-full max-w-64 overflow-hidden">
+      <div className="flex-col p-2 items-start w-full max-w-64 overflow-hidden hidden md:flex">
         <div className="flex flex-row gap-2 justify-between w-full items-center">
           <Logo style="small" className="my-2 ml-1" color={profile?.theme === 'dark' ? 'white' : 'black'}/>
           
@@ -165,11 +165,11 @@ export default function AppLayout({
                 <p className="text-xs text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Github</p>
                 {/* <ArrowRight size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" /> */}
               </Link>
-              <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group bg-sage-2 dark:bg-sage-4 hover:bg-sage-5 hover:border-sage-6 transition-colors duration-300 border border-sage-5 rounded-md p-1 px-2">
+              {/* <Link href="https://github.com/hyperaide/chaterface" target="_blank" className="flex flex-row items-center gap-1 group bg-sage-2 dark:bg-sage-4 hover:bg-sage-5 hover:border-sage-6 transition-colors duration-300 border border-sage-5 rounded-md p-1 px-2">
                 <Book size={12} weight="bold" className="text-sage-11 dark:text-sage-11 group-hover:text-sage-12 transition-colors duration-300" />
                 <p className="text-xs text-sage-11 dark:text-sage-11 hover:text-sage-12 transition-colors duration-300">Docs</p>
             
-              </Link>
+              </Link> */}
             </div>
           </div>
 
@@ -191,29 +191,25 @@ export default function AppLayout({
               <Link
                 key={conv.id}
                 href={`/conversations/${conv.id}`}
-                className={`flex flex-col justify-between text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
+                className={`flex flex-col justify-between text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
               >
                 <p className="truncate">{conv.name}</p>
                 <p className="text-xs text-sage-10 dark:text-sage-10">{DateTime.fromISO(conv.createdAt as string).toRelative()}</p>
               </Link>
-
-
-              // <div className="w-full flex">
-              //   <Link
-              //     key={conv.id}
-              //     href={`/conversations/${conv.id}`}
-              //     className={`text-sm px-2 py-1 w-full rounded-md hover:bg-sage-2 duration-300 truncate ${conv.id === conversationId ? 'bg-sage-3 font-medium text-sage-12 dark:text-sage-12' : 'text-sage-11 dark:text-sage-11'}`}
-              //   >
-              //     {conv.name}
-              //   </Link>
-              // </div>
             ))}
           </div>
         </div>
       </div>
 
+      <div className="flex flex-row items-center justify-center mt-2 overflow-hidden md:hidden">
+        <div className="flex flex-row items-center gap-2">
+          <Logo style="small" className="my-2 ml-1" color={profile?.theme === 'dark' ? 'white' : 'black'}/>
+        </div>
+
+      </div>
+
       {/* Main Content Area */}
-      <div className="w-full bg-white dark:bg-sage-2 mr-2 my-2 rounded-lg overflow-hidden border border-sage-4 dark:border-sage-5">
+      <div className="md:w-full bg-white dark:bg-sage-2 mr-2 my-2 ml-2 md:ml-0 rounded-lg overflow-hidden border border-sage-4 dark:border-sage-5">
         {children}
       </div>
     </div>

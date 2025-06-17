@@ -10,16 +10,9 @@ export default function PaymentSuccessPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // In a real application, you might want to fetch session details from your backend
-  // to verify the session and display more information.
-  // For now, we'll just acknowledge the success.
 
   useEffect(() => {
     if (sessionId) {
-      console.log('Payment successful for session ID:', sessionId);
-      // Here you could make a call to your backend if needed,
-      // e.g., to trigger any post-payment client-side actions
-      // or to fetch more details for display.
       setIsLoading(false);
     } else {
       setError('Session ID is missing. Payment status cannot be confirmed.');
@@ -29,30 +22,28 @@ export default function PaymentSuccessPage() {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column' }}>
-        <p>Loading payment details...</p>
+      <div className='flex justify-center items-center h-screen flex-col text-center'>
+        <p className='text-sm font-medium text-sage-10'>Loading payment details...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', color: 'red' }}>
-        <h1>Payment Confirmation Error</h1>
-        <p>{error}</p>
-        <Link href="/">Go to Homepage</Link>
+      <div className='flex justify-center items-center h-screen flex-col text-center'>
+        <h1 className='font-medium text-sage-12'>Payment Confirmation Error</h1>
+        <p className='text-sm font-medium text-sage-10'>{error}</p>
+        <Link href="/" className='text-sm font-medium text-sage-10'>Go to Homepage</Link>
       </div>
     );
   }
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', flexDirection: 'column', textAlign: 'center' }}>
-      <h1>Payment Successful!</h1>
-      <p>Thank you for your purchase.</p>
-      <p>Your session ID is: {sessionId}</p>
-      {/* You can add more details here if you fetch them */}
+    <div className='flex justify-center items-center h-screen flex-col text-center'>
+      <h1 className='font-medium text-sage-12'>Payment Successful!</h1>
+      <p className='text-sm font-medium text-sage-10'>Credits might take a few seconds to appear.</p>
       <br />
-      <Link href="/">Return to Homepage</Link>
+      <Link href="/" className='text-sm font-medium text-sage-10 underline'>Return to Homepage</Link>
     </div>
   );
 } 

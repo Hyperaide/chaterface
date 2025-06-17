@@ -9,7 +9,6 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const sessionId = searchParams.get('checkout_session_id');
 
-    console.log('sessionId', sessionId);
 
     if (!sessionId) {
       return NextResponse.redirect(new URL('/payment/error', request.url));
@@ -29,7 +28,6 @@ export async function GET(request: Request) {
           user: {}
         }
       })
-      console.log('profileData', profileData);
 
       await db.transact(
         db.tx.userProfiles[profileData.userProfiles[0].id].update({

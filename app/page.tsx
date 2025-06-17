@@ -165,7 +165,7 @@ export default function Home() {
 
       {conversationId ? (
         <div className="flex flex-col w-full h-full">
-          <div className="flex-1 overflow-y-auto pt-24 h-full">
+          <div className="flex-1 overflow-y-auto pt-24 h-full p-4">
             <MessageList messages={messages} messagesOnDB={data?.conversations[0]?.messages ?? []} />
           </div>
         </div>
