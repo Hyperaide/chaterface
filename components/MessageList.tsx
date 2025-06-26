@@ -2,7 +2,7 @@ import { InstaQLEntity } from "@instantdb/react";
 import { inspect } from "util";
 import { AppSchema } from "@/instant.schema";
 import { UIMessage } from "ai";
-import Message from "@/components/Message";
+import Message from "@/components/message";
 import { useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 

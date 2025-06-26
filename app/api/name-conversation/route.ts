@@ -11,9 +11,20 @@ export async function POST(request: Request) {
   const response = await generateText({
     model,
     prompt: `
-    You are a helpful assistant that names conversations between a user and an AI assistant.
-    You do this based on the first message that the user sends. Keep names clear and concise.
-    The first message is: ${data.firstMessageContent}
+    You are an expert assistant at naming conversations between a user and an AI assistant.
+    Your task is to generate a short, clear, and engaging title for the conversation, based solely on the user's first message.
+    - The title should capture the main topic or intent of the user's message.
+    - Keep the title concise (ideally 3-6 words).
+    - Avoid generic titles like "Chat" or "Conversation".
+    - Do not include the user's name or the word "AI" unless relevant.
+    - Capitalize main words.
+
+    Examples:
+    User: "How do I cook risotto?" → Title: "Cooking Risotto Tips"
+    User: "Help me write a resignation letter" → Title: "Resignation Letter Draft"
+    User: "What's new in AI research?" → Title: "Latest in AI Research"
+
+    The user's first message is: ${data.firstMessageContent}
     `,
     tools: {
       name_conversation: tool({

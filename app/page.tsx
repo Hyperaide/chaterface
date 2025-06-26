@@ -17,6 +17,7 @@ import { useRouter } from "next/navigation";
 import AnimatedMessageInput from "@/components/AnimatedMessageInput";
 import Toolbar from "@/components/Toolbar";
 import { useSidebarStore } from "@/components/Sidebar";
+import { startBackgroundJob } from "@/lib/background-jobs";
 
 export const useMessageStore = create((set) => ({
   message: "",
@@ -47,6 +48,7 @@ export default function Page() {
       createdAt: new Date().toISOString(),
       sessionId: sessionId
     }));
+    await startBackgroundJob(`${process.env.NEXT_PUBLIC_APP_URL}/api/name-conversation`, { conversationId, firstMessageContent: input });
     useMessageStore.setState({ message: input });
     router.push(`/conversations/${conversationId}`);
     setIsLoading(false);

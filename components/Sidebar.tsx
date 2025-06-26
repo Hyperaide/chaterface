@@ -102,9 +102,9 @@ export default function Sidebar() {
          <p className="text-base text-gray-11 transition-all duration-200">
            {conversation.name}
          </p>
-         <p className="text-xs text-gray-9 font-normal">
+         {/* <p className="text-xs text-gray-9 font-normal">
            Created {DateTime.fromISO(conversation.createdAt).toRelative()}
-         </p>
+         </p> */}
        </Link>
       ))}
        </div>
