@@ -18,10 +18,12 @@ import { useAuth } from "@/providers/auth-provider";
 import { useMessageStore } from "@/app/page";
 import ModelSelector from "@/components/ModelSelector";
 import AnimatedMessageInput from "@/components/AnimatedMessageInput";
+import { useSidebarStore } from "@/components/Sidebar";
 
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
 type Message = InstaQLEntity<AppSchema, "messages">;
 import { useRouter } from "next/navigation";
+import Toolbar from "@/components/Toolbar";
 
 export default function ConversationPage() {
   const message = useMessageStore((state: any) => state.message);
@@ -39,6 +41,7 @@ export default function ConversationPage() {
   const [initialMessages, setInitialMessages] = useState<any[]>([]);
 
   const hasRun = useRef(false);
+  const { sidebarOpen } = useSidebarStore();
 
   useEffect(() => {
     if (message !== "" && !hasRun.current) {
@@ -139,7 +142,7 @@ export default function ConversationPage() {
     }
 
     setInput("");
-    
+
     const newMessageId = newInstantId();
     
     // Create user message
@@ -166,9 +169,17 @@ export default function ConversationPage() {
   return (
     <div className="flex flex-col w-full h-full mx-auto relative">
       <div className="sticky top-0 z-10 left-0 right-0 p-4 border-b border-gray-3 dark:border-gray-2 flex flex-row gap-4 items-center justify-between">
-        <p className="text-xs text-gray-11">
-          {data?.conversations[0]?.name}
-        </p>
+        
+        
+        <div className="flex flex-row gap-4 items-center">
+          {!sidebarOpen && (
+            <Toolbar/>
+          )}
+          
+          <p className="text-xs text-gray-11">
+            {data?.conversations[0]?.name}
+          </p>
+        </div>
         <p className="text-tiny font-mono uppercase font-medium text-gray-11">
           {data?.conversations[0]?.messages.length} messages
         </p>

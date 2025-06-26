@@ -15,6 +15,8 @@ import { id } from "@instantdb/react";
 import { create } from 'zustand'
 import { useRouter } from "next/navigation";
 import AnimatedMessageInput from "@/components/AnimatedMessageInput";
+import Toolbar from "@/components/Toolbar";
+import { useSidebarStore } from "@/components/Sidebar";
 
 export const useMessageStore = create((set) => ({
   message: "",
@@ -29,6 +31,7 @@ export default function Page() {
   const { user, sessionId } = useAuth();
   const { theme } = useTheme();
   const router = useRouter();
+  const { sidebarOpen } = useSidebarStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(e.target.value);
@@ -51,17 +54,9 @@ export default function Page() {
 
   return (
     <>
-        {/* <div className="sticky top-0 z-10 left-0 right-0 p-4 border-b border-gray-3 dark:border-gray-2 flex flex-row gap-4 items-center">
-          <div className="flex flex-row gap-1 items-center">
-            <Folder size={16} className="text-gray-11" />
-            <p className="text-xs text-gray-11">
-              Space Stuff
-            </p>
-          </div>
-          <p className="text-xs text-gray-11">
-            Something about going to the moon
-          </p>
-        </div> */}
+        {!sidebarOpen && (
+          <Toolbar className="absolute top-4 left-4"/>
+        )}
 
 
         <div className="flex flex-col gap-4 p-4 py-8 max-w-4xl mx-auto hidden">

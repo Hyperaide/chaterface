@@ -15,6 +15,7 @@ import Logo from "./logo";
 import ThemeToggle from "./misc/ThemeToggle";
 import { create } from "zustand";
 import { AnimatePresence, motion } from "motion/react";
+import Toolbar from "./Toolbar";
 
 type SidebarStore = {
   sidebarOpen: boolean;
@@ -36,15 +37,6 @@ export default function Sidebar() {
   const { showModal } = useModal();
   const { sidebarOpen, setSidebarOpen } = useSidebarStore();
   
-  const url = db.auth.createAuthorizationURL({
-    clientName: "google-web",
-    redirectURL: window.location.href,
-  });
-
-  const signOut = () => {
-    db.auth.signOut();
-  };
-
 
   return (
 
@@ -58,26 +50,7 @@ export default function Sidebar() {
 
 
           
-          <div className="flex flex-row gap-1 bg-gray-2 dark:bg-gray-3 rounded-md p-px items-center">
-            {user ? (
-              <button onClick={() => signOut()} className="p-1 hover:bg-gray-2 dark:hover:bg-gray-3 rounded-md group transition-colors duration-300">
-                <SignOut size={14} weight="bold" className="text-gray-10 group-hover:text-gray-12 dark:text-gray-9 dark:group-hover:text-gray-11 transition-colors duration-300" />
-              </button>
-            ) : (
-              <Link href={url} className="p-1 hover:bg-gray-2 dark:hover:bg-gray-3 rounded-md group transition-colors duration-300">
-                <SignIn size={14} weight="bold" className="text-gray-10 group-hover:text-gray-12 dark:text-gray-9 dark:group-hover:text-gray-11 transition-colors duration-300" />
-              </Link>
-            )}
-
-            <Link href="/" className="p-1 hover:bg-gray-2 dark:hover:bg-gray-3 rounded-md group transition-colors duration-300">
-              <Plus size={14} weight="bold" className="text-gray-10 group-hover:text-gray-12 dark:text-gray-9 dark:group-hover:text-gray-11 transition-colors duration-300" />
-            </Link>
-
-            <button className="p-1 hover:bg-gray-2 dark:hover:bg-gray-3 rounded-md group transition-colors duration-300" onClick={() => setSidebarOpen(!sidebarOpen)}>
-              <SidebarSimple size={14} weight="bold" className="text-gray-10 group-hover:text-gray-12 dark:text-gray-9 dark:group-hover:text-gray-11 transition-colors duration-300" />
-            </button>
-            
-          </div>
+          <Toolbar/>
         </div>
       {/* Credits */}
       <div className="flex flex-col gap-2 border bg-white dark:bg-gray-2 border-gray-3 dark:border-gray-3 rounded-md p-2 w-full mt-1 divide-y divide-gray-3">
