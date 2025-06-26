@@ -18,11 +18,7 @@ import AnimatedMessageInput from "@/components/AnimatedMessageInput";
 import Toolbar from "@/components/Toolbar";
 import { useSidebarStore } from "@/components/Sidebar";
 import { startBackgroundJob } from "@/lib/background-jobs";
-
-export const useMessageStore = create((set) => ({
-  message: "",
-  setMessage: (message: string) => set({ message }),
-}))
+import { useMessageStore } from "./utils/message-store";
 
 export default function Page() {
   const { db } = useDatabase();

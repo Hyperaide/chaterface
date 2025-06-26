@@ -15,7 +15,7 @@ import { UIMessage } from "ai";
 import { useNewConversation } from "@/providers/new-conversation-provider";
 import { calculateCreditCost, models } from "@/constants/models";
 import { useAuth } from "@/providers/auth-provider";
-import { useMessageStore } from "@/app/page";
+import { useMessageStore } from "@/app/utils/message-store";
 import ModelSelector from "@/components/ModelSelector";
 import AnimatedMessageInput from "@/components/AnimatedMessageInput";
 import { useSidebarStore } from "@/components/Sidebar";
