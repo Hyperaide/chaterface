@@ -9,12 +9,48 @@
 @import "@radix-ui/colors/red.css";
 @import "@radix-ui/colors/amber.css";
 @import "@radix-ui/colors/grass.css";
+@import "@radix-ui/colors/gray.css";
+@import "@radix-ui/colors/gray-dark.css";
+@import "@radix-ui/colors/purple.css";
+@import "@radix-ui/colors/yellow.css";
+@import "@radix-ui/colors/green.css";
+@import "@radix-ui/colors/tomato.css";
+
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme inline {
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  --text-tiny: 0.6875rem; /* 11px */
+  --text-base: 0.8125rem; /* 13px */
+
+    --color-gray-1: var(--gray-1);
+    --color-gray-2: var(--gray-2);
+    --color-gray-3: var(--gray-3);
+    --color-gray-4: var(--gray-4);
+    --color-gray-5: var(--gray-5);
+    --color-gray-6: var(--gray-6);
+    --color-gray-7: var(--gray-7);
+    --color-gray-8: var(--gray-8);
+    --color-gray-9: var(--gray-9);
+    --color-gray-10: var(--gray-10);
+    --color-gray-11: var(--gray-11);
+    --color-gray-12: var(--gray-12);
+
+    --color-gray-dark-1: var(--gray-dark-1);
+    --color-gray-dark-2: var(--gray-dark-2);
+    --color-gray-dark-3: var(--gray-dark-3);
+    --color-gray-dark-4: var(--gray-dark-4);
+    --color-gray-dark-5: var(--gray-dark-5);
+    --color-gray-dark-6: var(--gray-dark-6);
+    --color-gray-dark-7: var(--gray-dark-7);
+    --color-gray-dark-8: var(--gray-dark-8);
+    --color-gray-dark-9: var(--gray-dark-9);
+    --color-gray-dark-10: var(--gray-dark-10);
+    --color-gray-dark-11: var(--gray-dark-11);
+    --color-gray-dark-12: var(--gray-dark-12);
 
     --color-teal-1: var(--teal-1);
     --color-teal-2: var(--teal-2);
@@ -134,8 +170,78 @@
     --color-grass-10: var(--grass-10);
     --color-grass-11: var(--grass-11);
     --color-grass-12: var(--grass-12);
+
+    --color-purple-1: var(--purple-1);
+    --color-purple-2: var(--purple-2);
+    --color-purple-3: var(--purple-3);
+    --color-purple-4: var(--purple-4);
+    --color-purple-5: var(--purple-5);
+    --color-purple-6: var(--purple-6);
+    --color-purple-7: var(--purple-7);
+    --color-purple-8: var(--purple-8);
+    --color-purple-9: var(--purple-9);
+    --color-purple-10: var(--purple-10);
+    --color-purple-11: var(--purple-11);
+    --color-purple-12: var(--purple-12);
+
+    --color-yellow-1: var(--yellow-1);
+    --color-yellow-2: var(--yellow-2);
+    --color-yellow-3: var(--yellow-3);
+    --color-yellow-4: var(--yellow-4);
+    --color-yellow-5: var(--yellow-5);
+    --color-yellow-6: var(--yellow-6);
+    --color-yellow-7: var(--yellow-7);
+    --color-yellow-8: var(--yellow-8);
+    --color-yellow-9: var(--yellow-9);
+    --color-yellow-10: var(--yellow-10);
+    --color-yellow-11: var(--yellow-11);
+    --color-yellow-12: var(--yellow-12);
+
+    --color-green-1: var(--green-1);
+    --color-green-2: var(--green-2);
+    --color-green-3: var(--green-3);
+    --color-green-4: var(--green-4);
+    --color-green-5: var(--green-5);
+    --color-green-6: var(--green-6);
+    --color-green-7: var(--green-7);
+    --color-green-8: var(--green-8);
+    --color-green-9: var(--green-9);
+    --color-green-10: var(--green-10);
+    --color-green-11: var(--green-11);
+    --color-green-12: var(--green-12);
+
+    --color-tomato-1: var(--tomato-1);
+    --color-tomato-2: var(--tomato-2);
+    --color-tomato-3: var(--tomato-3);
+    --color-tomato-4: var(--tomato-4);
+    --color-tomato-5: var(--tomato-5);
+    --color-tomato-6: var(--tomato-6);
+    --color-tomato-7: var(--tomato-7);
+    --color-tomato-8: var(--tomato-8);
+    --color-tomato-9: var(--tomato-9);
+    --color-tomato-10: var(--tomato-10);
+    --color-tomato-11: var(--tomato-11);
+    --color-tomato-12: var(--tomato-12);
 }
 
 .better-shadow {
-  box-shadow: rgba(28, 40, 64, 0.04) 0px 0px 0px 1px, rgba(28, 40, 64, 0.12) 0px 4px 8px -4px, rgba(28, 40, 64, 0.16) 0px 4px 12px -2px;
+  box-shadow:
+    2px 2px 4px rgba(0, 0, 0, 0.02),
+    0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.better-shadow-md {
+  box-shadow:
+    0 4px 16px 0px rgba(0, 0, 0, 0.06),
+    0 1.5px 6px 0px rgba(0, 0, 0, 0.04);
+}
+
+
+
+
+.bg-hero {
+  background-image: url('/hero-noise.png');
+}
+.dark .bg-hero {
+  background-image: url('/bg-dark.png');
 }

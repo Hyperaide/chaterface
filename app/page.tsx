@@ -1,185 +1,142 @@
-'use client';
+"use client";
 
-import { useState, useRef, useEffect } from "react";
-import { useDatabase } from "@/providers/database-provider";
-import { useKey } from "@/providers/key-provider";
-import { useRouter } from 'next/navigation';
-import { DateTime } from "luxon";
-import { id, InstaQLEntity } from "@instantdb/react";
 import Button from "@/components/button";
-import ApiKeyInput from "@/components/api-key-input";
-import Logo from "@/components/logo";
-import { Lora } from "next/font/google";
 import IntroductionModal from "@/components/IntroductionModal";
-import { AnimatePresence } from "motion/react";
-import ChatInput from "@/components/ChatInput";
-import NewMessageInput from "@/components/NewMessageInput";
-import { useNewConversation } from "@/providers/new-conversation-provider";
-import { useChat } from "@ai-sdk/react";
+import Logo from "@/components/logo";
+import ModelSelector from "@/components/ModelSelector";
+import { models } from "@/constants/models";
+import { DiamondsFour, Folder } from "@phosphor-icons/react";
+import { useState } from "react";
 import { useAuth } from "@/providers/auth-provider";
-import { AppSchema } from "@/instant.schema";
-import MessageList from "@/components/MessageList";
-import { startBackgroundJob } from "@/lib/background-jobs";
-const lora = Lora({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-});
+import { useTheme } from "@/providers/theme-provider";
+import Sidebar from "@/components/Sidebar";
+import { useDatabase } from "@/providers/database-provider";
+import { id } from "@instantdb/react";
+import { create } from 'zustand'
+import { useRouter } from "next/navigation";
+import AnimatedMessageInput from "@/components/AnimatedMessageInput";
 
-type Message = InstaQLEntity<AppSchema, "messages">;
+export const useMessageStore = create((set) => ({
+  message: "",
+  setMessage: (message: string) => set({ message }),
+}))
 
-export default function Home() {
+export default function Page() {
   const { db } = useDatabase();
-  const { providerKeys } = useKey();
-  const router = useRouter();
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { user, sessionId } = useAuth();
-  const [content, setContent] = useState<string>('');
-  const [isLoading, setIsLoading] = useState(false); // Changed from isStreaming for clarity
-  const [conversationId, setConversationId] = useState<string>('');
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { getProviderKey } = useKey();
-  const [selectedModel, setSelectedModel] = useState<string>('openai/gpt-4.1-nano');
+  const { theme } = useTheme();
+  const router = useRouter();
 
-  const [dbMessages, setDbMessages] = useState<Message[]>([]);
-
-  const conversationIdRef = useRef<string>('');
-
-  const { data } = db.useQuery({
-    conversations: {
-      $: {
-        where: { id: conversationId }
-      },
-      messages: {}
-    }
-  }, {
-    ruleParams: {
-      sessionId: sessionId ?? ''
-    }
-  });
-
-  useEffect(() => {
-    if(conversationId && data && !data?.conversations[0]){
-      setDbMessages(data?.conversations[0]?.messages ?? []);
-    }
-  }, [data]);
-  
-  const { messages, input, handleInputChange, append, setInput, status } = useChat({
-    api: '/api/chat',
-    headers: {
-      'Authorization': `Bearer ${getProviderKey(selectedModel)}`,
-      'X-Session-Id': sessionId ?? '',
-      'X-Token': user?.refresh_token ?? ''
-    },
-    body: {
-      model: selectedModel
-    },
-    onError: async (error) => {
-      setIsProcessing(false);
-      setErrorMessage(error.message);
-    },
-    onFinish: async (message) => {
-      setIsProcessing(false);
-      const aiMessageId = id();
-      const currentConversationId = conversationIdRef.current; // Get the latest value
-
-      if(currentConversationId){ // Check using the ref's value
-        await db.transact(db.tx.messages[aiMessageId].ruleParams({ sessionId: sessionId }).update({
-          content: message.content,
-          role: "assistant",
-          createdAt: DateTime.now().toISO(),
-          model: selectedModel
-        }).link({ conversation: currentConversationId })); // Use the ref's value
-      } else {
-         console.error("onFinish executed but conversationIdRef.current was empty.");
-         // Optionally handle this error case, though it shouldn't happen if createMessage runs first
-      }
-    }
-  });
-
-  // const { newConversationMessage, setNewConversationMessage, setNewConversationId } = useNewConversation();
-
-  // Get the current provider from the selected model
-  const currentProvider = selectedModel.split('/')[0] as keyof typeof providerKeys;
-
-  const getPlaceholder = () => {
-    if (!providerKeys[currentProvider]) {
-      return `Please set your ${currentProvider} API key first...`;
-    }
-    return "Start a new chat...";
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
   };
 
-  async function createMessage(content: string) {
-    setIsProcessing(true);
-    setErrorMessage(null);
-
-    if(!conversationId){
-      const generatedNewConversationId = id();
-      setConversationId(generatedNewConversationId);
-      conversationIdRef.current = generatedNewConversationId;
-
-      // create conversation
-      await db.transact(db.tx.conversations[generatedNewConversationId].update({
-        createdAt: DateTime.now().toISO(),
-        name: content.slice(0, 20).trim(),
-        sessionId: sessionId ?? ''
-      }));
-
-      await db.transact(db.tx.messages[id()].ruleParams({ sessionId: sessionId }).update({
-        content: content,
-        role: "user",
-        createdAt: DateTime.now().toISO(),
-        model: selectedModel
-      }).link({ conversation: generatedNewConversationId }));
-
-      await startBackgroundJob(`${window.location.origin}/api/name-conversation`, {
-        conversationId: generatedNewConversationId,
-        firstMessageContent: content
-      });
-    }else{
-      await db.transact(db.tx.messages[id()].ruleParams({ sessionId: sessionId }).update({
-        content: content,
-        role: "user",
-        createdAt: DateTime.now().toISO(),
-        model: selectedModel
-      }).link({ conversation: conversationId }));
-    }
-
-    append({
-      role: "user",
-      content: content,
-      parts: [{
-        type: "text",
-        text: content
-      }]
-    });
-
-    setInput('');
-  }
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    setIsLoading(true);
+    const conversationId = id();
+    await db.transact(db.tx.conversations[conversationId].update({
+      name: "New Conversation",
+      createdAt: new Date().toISOString(),
+      sessionId: sessionId
+    }));
+    useMessageStore.setState({ message: input });
+    router.push(`/conversations/${conversationId}`);
+    setIsLoading(false);
+  };
 
   return (
-    <div className="w-full h-screen flex flex-col relative items-center justify-center">
+    <>
+        {/* <div className="sticky top-0 z-10 left-0 right-0 p-4 border-b border-gray-3 dark:border-gray-2 flex flex-row gap-4 items-center">
+          <div className="flex flex-row gap-1 items-center">
+            <Folder size={16} className="text-gray-11" />
+            <p className="text-xs text-gray-11">
+              Space Stuff
+            </p>
+          </div>
+          <p className="text-xs text-gray-11">
+            Something about going to the moon
+          </p>
+        </div> */}
 
-      {!user && (
-        <IntroductionModal />
-      )}
 
-      {conversationId ? (
-        <div className="flex flex-col w-full h-full">
-          <div className="flex-1 overflow-y-auto pt-24 h-full p-4">
-            <MessageList messages={messages} messagesOnDB={data?.conversations[0]?.messages ?? []} />
+        <div className="flex flex-col gap-4 p-4 py-8 max-w-4xl mx-auto hidden">
+          <div className="flex flex-col gap-1 p-6">
+            {/* <p className="text-[11px] text-gray-11 font-mono">
+              You
+            </p> */}
+            <p className="text-sm text-gray-11">
+              Hello mate how are you
+            </p>
+          </div>
+
+          <div className="relative flex flex-col gap-1 p-px bg-gray-3 dark:bg-gray-2 rounded w-max max-w-4xl">
+            <div className="relative flex flex-col gap-1 bg-gray-1 p-6 rounded">
+              <p className="z-10 absolute -top-2 left-4 text-[11px] text-gray-11 font-mono uppercase font-medium bg-gray-1 px-2 rounded-md">
+                Claude 4 Opus
+              </p>
+              <p className="text-sm text-gray-12">
+              Ex dolore qui nulla mollit culpa magna nostrud. Deserunt consequat sit elit reprehenderit. Culpa aute quis irure labore aliquip est dolore nostrud occaecat pariatur ullamco ea fugiat laborum elit. Nisi amet anim magna consectetur id enim velit laborum esse qui. Veniam velit magna enim sunt cillum do laborum. Cillum voluptate ad ut.
+              </p>
+
+              <p className="z-10 absolute -bottom-2 left-4 text-[11px] flex flex-row items-center gap-1 text-gray-11 font-mono uppercase font-medium bg-gray-1 px-2 rounded-md">
+              <DiamondsFour size={12} className="text-teal-9" weight="fill" />
+              25
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1 p-6">
+            {/* <p className="text-[11px] text-gray-11 font-mono">
+              You
+            </p> */}
+            <p className="text-sm text-gray-11">
+              Hello mate how are you
+            </p>
+          </div>
+
+          <div className="relative flex flex-col gap-1 p-px bg-gray-3 dark:bg-gray-2 rounded w-max max-w-4xl">
+            <div className="relative flex flex-col gap-1 bg-gray-1 p-6 rounded">
+              <p className="z-10 absolute -top-2 left-4 text-[11px] text-gray-11 font-mono uppercase font-medium bg-gray-1 px-2 rounded-md">
+                openai/gpt-4.1-nano
+              </p>
+              <p className="text-sm text-gray-12">
+              Ex dolore qui nulla mollit culpa magna nostrud. Deserunt consequat sit elit reprehenderit. Culpa aute quis irure labore aliquip est dolore nostrud occaecat pariatur ullamco ea fugiat laborum elit. Nisi amet anim magna consectetur id enim velit laborum esse qui. Veniam velit magna enim sunt cillum do laborum. Cillum voluptate ad ut.
+              </p>
+
+              <p className="z-10 absolute -bottom-2 left-4 text-[11px] flex flex-row items-center gap-1 text-gray-11 font-mono uppercase font-medium bg-gray-1 px-2 rounded-md">
+              <DiamondsFour size={12} className="text-teal-9" weight="fill" />
+              25
+              </p>
+            </div>
           </div>
         </div>
-      ) : (
-        <div className="overflow-y-auto px-4 pt-6 flex items-center justify-center">
-          <div className="text-center">
-              <h2 className="text-xl font-medium text-sage-12">What's on your mind?</h2>
-              <p className="text-sage-11 text-sm font-mono mt-1">Send a message to start a new conversation.</p>
-          </div>
-        </div>
-      )}
 
-      
-      <NewMessageInput input={input} handleInputChange={handleInputChange} createMessage={createMessage} selectedModel={selectedModel} setSelectedModel={setSelectedModel} onHomepage={conversationId ? false : true} isProcessing={isProcessing} errorMessage={errorMessage} setInput={setInput} />
-    </div>
-  );
+
+          <div className="flex flex-col gap-4 p-4 py-8 max-w-4xl mx-auto justify-center items-center h-dvh">
+
+            <div className="flex flex-col gap-1 items-center text-center mb-4">
+              <p className="text-sm text-gray-11"> 
+                What's on your mind?
+              </p>
+              <p className="text-xs text-gray-10">
+              Send a message to start a new conversation.
+              </p>
+            </div>
+
+            <AnimatedMessageInput
+              value={input}
+              onChange={handleInputChange}
+              onSubmit={handleSubmit}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              isLoading={isLoading}
+              layoutId="message-input"
+            />
+          </div>
+          </>
+  )
 }
