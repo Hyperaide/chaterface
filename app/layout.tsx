@@ -8,6 +8,10 @@ import AppLayout from "@/components/AppLayout";
 import { NewConversationProvider } from "../providers/new-conversation-provider";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { ModalProvider } from "@/providers/modal-provider";
+import { ThemeProvider } from "../providers/theme-provider";
+import AppContainer from "@/components/AppContainer";
+import { AnimatePresence } from "framer-motion";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -35,19 +39,21 @@ export default function RootLayout({
       >
         
           <PostHogProvider>
-            <DatabaseProvider>
-            <KeyProvider>
-              <NewConversationProvider>
                 <AuthProvider>
+                  <DatabaseProvider>
+                  <KeyProvider>
+                  <NewConversationProvider>
+                <ThemeProvider>
                 <ModalProvider>
-                  <AppLayout>
-                    {children}
-                  </AppLayout>
+                    <AppContainer>
+                      <AnimatePresence mode="wait">{children}</AnimatePresence>
+                    </AppContainer>
                 </ModalProvider>
-                </AuthProvider>
-              </NewConversationProvider>
-            </KeyProvider>
+                </ThemeProvider>
+                </NewConversationProvider>
+              </KeyProvider>
             </DatabaseProvider>
+          </AuthProvider>
           </PostHogProvider>
       </body>
     </html>

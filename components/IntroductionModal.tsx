@@ -3,8 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/button';
 import Logo from '@/components/logo';
 import { Lora } from "next/font/google";
-import { GithubLogo, ChatTeardropDots, Gear } from "@phosphor-icons/react/dist/ssr";
-import { Code, DiamondsFour, User } from '@phosphor-icons/react';
+import { Code } from '@phosphor-icons/react';
+import ThemeToggle from '@/components/misc/ThemeToggle';
 
 const lora = Lora({
   subsets: ["latin"],
@@ -22,9 +22,7 @@ const IntroductionModal: React.FC = () => {
           closeModal();
         }
       };
-
       document.addEventListener('mousedown', handleClickOutside);
-
       return () => {
         document.removeEventListener('mousedown', handleClickOutside);
       };
@@ -33,13 +31,13 @@ const IntroductionModal: React.FC = () => {
 
   const closeModal = () => {
     setIsOpen(false);
-  }
+  };
 
   return (
     <AnimatePresence>
       {isOpen && (
         <motion.div
-          className="fixed inset-0 bg-black/25 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-white/50 dark:bg-black/50 z-50 flex lg:items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -47,67 +45,92 @@ const IntroductionModal: React.FC = () => {
         >
           <motion.div
             ref={modalRef}
-            className="bg-sage-2 p-2 rounded-xl better-shadow max-w-xl w-full border border-sage-4"
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95, transition: { delay: 0.2 } }}
+            className="bg-gray-1 rounded-xl better-shadow max-w-2xl w-full border border-gray-3 overflow-auto relative"
+            initial={{ opacity: 0, scale: 0.95, y: 50 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 50, transition: { delay: 0.2 } }}
             transition={{ duration: 0.2 }}
           >
-            <div
-              className="flex flex-col w-full relative overflow-hidden rounded-lg"
-              style={{
-                backgroundImage: "url('/hero-noise.png')",
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-              }}
-            >
-              <div className="w-full">
-                <div className="flex flex-row items-center w-full max-w-7xl mx-auto pt-8 pb-4 justify-between">
-                  <div className="flex flex-row items-center w-max mx-auto gap-4 dark">
-                    <Logo color="white"/>
+            <div className='flex flex-row px-4 py-2 bg-gray-2 border-b border-gray-3 justify-between sticky top-0 z-10'>
+              <div className='flex flex-row items-center gap-2'>
+                <div onClick={() => setIsOpen(false)} className='cursor-pointer h-3 w-3 bg-tomato-9 rounded-full flex items-center justify-center group'>
+                  <div className='h-1 w-1 bg-tomato-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                </div>
+                <div onClick={() => setIsOpen(false)} className='cursor-pointer h-3 w-3 bg-amber-9 rounded-full flex items-center justify-center group'>
+                  <div className='h-1 w-1 bg-amber-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                </div>
+                <div onClick={() => setIsOpen(false)} className='cursor-pointer h-3 w-3 bg-grass-9 rounded-full flex items-center justify-center group'>
+                  <div className='h-1 w-1 bg-grass-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+                </div>
+              </div>
+              <div className='flex flex-row items-center gap-px bg-gray-4 p-px rounded-md'>
+                <ThemeToggle />
+              </div>
+            </div>
+
+            <div className='w-full border-gray-3 border-b'>
+              <div className='flex flex-row items-center gap-2 mx-auto'>
+                <div
+                  className="flex flex-col w-full relative overflow-hidden bg-hero"
+                  style={{
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                >
+                  <div className="w-full">
+                    <div className="flex flex-row items-center w-full max-w-7xl mx-auto pt-8 pb-4 justify-between">
+                      <div className="flex flex-row items-center w-max mx-auto gap-4 dark">
+                        <Logo color="white" style="small" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-40 px-4 gap-1">
+                    <h1 className={`text-2xl font-medium text-gray-2 relative z-10 dark:text-gray-12`}>Your Interface to Intelligence</h1>
+                    <p className={`text-base text-gray-4 relative z-10 dark:text-gray-11`}>Chaterface is an open source chat interface for large language models.</p>
                   </div>
                 </div>
               </div>
-
-              <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-40 px-4">
-                <h1 className={`${lora.className} text-2xl font-semibold text-sage-1 relative z-10`}>Your Interface to Intelligence</h1>
-                <p className={`text-sm text-sage-5 relative z-10`}>Chaterface is an open source chat interface for large language models.</p>
-              </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 px-2 pb-2">
-              
-              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
-                <div className="flex items-center gap-1 mb-1">
-                  <ChatTeardropDots size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-medium text-sage-12">Unified Interface</h3>
+            <div className='w-full border-gray-3'>
+              <div className='flex flex-col divide-y divide-gray-3 lg:divide-y-0 lg:grid grid-cols-1 md:grid-cols-3 border-gray-3 dark:border-gray-21 mx-auto'>
+                <div className="flex flex-col gap-1 border-gray-3 dark:border-gray-2 lg:border-r p-8">
+                  <div className="flex flex-col gap-1 mb-1">
+                    <h3 className="text-base font-medium text-gray-12 text-pretty">Every AI model</h3>
+                  </div>
+                  <p className="text-xs text-gray-10 text-pretty">
+                    All the latest AI models all in one place.
+                  </p>
                 </div>
-                <p className="text-xs text-sage-11">
-                  Access leading models from OpenAI, Anthropic, and Google all in one consistent chat interface.
-                </p>
-              </div>
-              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg">
-                <div className="flex items-center gap-1 mb-1">
-                  <DiamondsFour size={16} weight="fill" className="text-sage-12"/>
-                  <h3 className="text-sm font-medium text-sage-12">Credit Based Pricing</h3>
+                <div className="flex flex-col gap-1 border-gray-3 dark:border-gray-2 lg:border-r p-8">
+                  <div className="flex flex-col gap-1 mb-1">
+                    <h3 className="text-base font-medium text-gray-12 text-pretty">Credit based pricing</h3>
+                  </div>
+                  <p className="text-xs text-gray-10 text-pretty">
+                    Just buy credits and pay for what you need.
+                  </p>
                 </div>
-                <p className="text-xs text-sage-11">
-                  No need to get locked in to a monthly subscription. Just pay for what you need. 
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-1 bg-sage-2 border border-sage-3 p-3 rounded-lg col-span-2">
-                <div className="flex items-center gap-1 mb-1">
-                  <GithubLogo size={16} weight="bold" className="text-sage-12"/>
-                  <h3 className="text-sm font-medium text-sage-12">Open Source</h3>
+                <div className="flex flex-col gap-1 border-gray-3 p-8">
+                  <div className="flex flex-col gap-1 mb-1">
+                    <h3 className="text-base font-medium text-gray-12 text-pretty">Built For power users</h3>
+                  </div>
+                  <p className="text-xs text-gray-10 text-pretty">
+                    Move fast with keyboard shortcuts.
+                  </p>
                 </div>
-                <p className="text-xs text-sage-11">
-                  Host it yourself or contribute to the project. It's fully open-source.
-                </p>
-                <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="w-max mt-2 bg-sage-3 hover:bg-sage-4 text-sage-12 border border-sage-5" icon={<Code size={14} weight="bold" />}>View Code</Button>
+                <div className="flex flex-col gap-1 border-gray-3 dark:border-gray-2 lg:border-t p-10 col-span-3 items-center justify-center">
+                  <div className="flex flex-col gap-1 items-center mb-1 mt-2">
+                    <h3 className="text-sm font-medium text-gray-12 text-pretty">Open Source</h3>
+                    <p className="text-xs text-gray-10 max-w-sm text-center">
+                      Chaterface is fully open-source and built with mordern tech like Next.js, Tailwind CSS, Instant DB and Vercel's AI SDK.
+                    </p>
+                  </div>
+                  <div className='flex flex-row gap-2 mt-2'>
+                    <Button size="small" href="https://github.com/hyperaide/chaterface" target="_blank" className="w-max mt-2 bg-gray-3 hover:bg-gray-4 text-gray-12 border border-gray-5" icon={<Code size={14} weight="bold" />}>View Code</Button>
+                  </div>
+                </div>
               </div>
             </div>
-
           </motion.div>
         </motion.div>
       )}

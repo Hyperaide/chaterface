@@ -19,24 +19,24 @@ export default function PlansModal() {
   return (
     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="w-full max-w-xl h-max absolute inset-0 mt-20 z-50 rounded-xl mx-auto">
       <div className="flex flex-col w-full p-2">
-        <h1 className="text-sage-12 font-medium text-md">
+        <h1 className="text-gray-12 font-medium text-md">
           Purchase Credits
         </h1>
-        <p className="text-sage-11 text-sm">
+        <p className="text-gray-11 text-sm">
           Select an amount for a one-time credit purchase.
         </p>
 
-        <div className="flex flex-col items-center w-full mt-8 gap-4 bg-white dark:bg-sage-2 border border-sage-3 rounded-lg p-6">
+        <div className="flex flex-col items-center w-full mt-8 gap-4 bg-white dark:bg-gray-2 border border-gray-3 rounded-lg p-6">
           <div className="w-full flex justify-between items-center mb-4">
-            <span className="text-sage-12 font-medium text-lg">
+            <span className="text-gray-12 font-medium text-lg">
 
               {/* ${sliderValue} */}
               <NumberFlow value={sliderValue} prefix="$" />
             </span>
 
-            <p className="text-sage-10 text-[11px] max-w-xs text-right">
+            <p className="text-gray-10 text-[11px] max-w-xs text-right">
               Chaterface is fully open source so you can also use it for free by hosting it yourself. {" "}
-              <a href="https://github.com/hyperaide/chaterface" target="_blank" rel="noopener noreferrer" className="text-sage-12 hover:underline transition-all duration-300">
+              <a href="https://github.com/hyperaide/chaterface" target="_blank" rel="noopener noreferrer" className="text-gray-12 hover:underline transition-all duration-300">
                 View on GitHub
               </a>
             </p>
@@ -48,25 +48,25 @@ export default function PlansModal() {
             max="100"
             value={sliderValue}
             onChange={(e) => setSliderValue(parseInt(e.target.value))}
-            className="w-full h-1 bg-sage-4 rounded-lg appearance-none cursor-pointer dark:bg-sage-5 accent-teal-9"
+            className="w-full h-1 bg-gray-4 rounded-lg appearance-none cursor-pointer dark:bg-gray-5 accent-teal-9"
             autoFocus={false}
           />
-          <div className="w-full flex justify-between text-[10px] text-sage-11">
+          <div className="w-full flex justify-between text-[10px] text-gray-11">
             <span>$5 (5,000 credits)</span>
             <span>$100 (100,000 credits)</span>
           </div>
 
           <div className="w-full flex flex-row gap-2 justify-between items-center mt-2">
             
-            <div className="text-sage-11 text-md flex flex-row items-center gap-1">
+            <div className="text-gray-11 text-md flex flex-row items-center gap-1">
               
-              <DiamondsFour size={16} weight="fill" className="text-teal-8 group-hover:text-sage-12 transition-colors duration-300" />
-              <NumberFlow value={credits} className="text-md text-sage-12" />
+              <DiamondsFour size={16} weight="fill" className="text-teal-8 group-hover:text-gray-12 transition-colors duration-300" />
+              <NumberFlow value={credits} className="text-md text-gray-12" />
             </div>
-            {/* <p className="text-sage-10 text-xs mt-4 max-w-xs">
+            {/* <p className="text-gray-10 text-xs mt-4 max-w-xs">
               Chaterface is fully open source. You can also host it yourself
               for free. {" "}
-              <a href="https://github.com/hyperaide/chaterface" target="_blank" rel="noopener noreferrer" className="text-sage-12 hover:underline transition-all duration-300">
+              <a href="https://github.com/hyperaide/chaterface" target="_blank" rel="noopener noreferrer" className="text-gray-12 hover:underline transition-all duration-300">
                 View on GitHub
               </a>
             </p> */}
@@ -86,7 +86,7 @@ export default function PlansModal() {
                       if (!response.ok) {
                         // Handle errors, e.g., show a notification to the user
                         console.error('Failed to create Stripe session:', response.statusText);
-                        // You might want to show an error message to the user here
+                        // You might want to show an error mesgray to the user here
                         return;
                       }
                       const { url: checkoutUrl } = await response.json();
@@ -101,14 +101,14 @@ export default function PlansModal() {
                       // Handle network errors or other issues
                     }
                   }}
-                  className="w-max ml-auto justify-center text-xs bg-sage-1 border border-sage-5 rounded-md px-4 py-2 text-sage-12 hover:bg-sage-3 dark:bg-sage-3 dark:border-sage-5 dark:text-sage-11 dark:hover:bg-sage-4"
+                  className="w-max ml-auto justify-center text-xs bg-gray-1 border border-gray-5 rounded-md px-4 py-2 text-gray-12 hover:bg-gray-3 dark:bg-gray-3 dark:border-gray-5 dark:text-gray-11 dark:hover:bg-gray-4"
                 >
                   Buy Credits
                 </Button>
               ) : (
                 <Button
                   href={url}
-                  className="w-full justify-center text-sm bg-sage-1 border border-sage-5 rounded px-4 py-2 text-sage-12 hover:bg-sage-3 dark:bg-sage-3 dark:border-sage-5 dark:text-sage-11 dark:hover:bg-sage-4"
+                  className="w-full justify-center text-sm bg-gray-1 border border-gray-5 rounded px-4 py-2 text-gray-12 hover:bg-gray-3 dark:bg-gray-3 dark:border-gray-5 dark:text-gray-11 dark:hover:bg-gray-4"
                 >
                   Sign Up With Google
                 </Button>
