@@ -76,3 +76,41 @@ export const calculateCreditCost = (model: string, usage: any) => {
 
   return totalCreditCost;
 }
+
+
+export const providers = [
+  {
+    id: "openai",
+    name: "OpenAI",
+    models: [
+      "openai/gpt-4.1",
+      "openai/gpt-4.1-mini",
+      "openai/gpt-4.1-nano",
+      "openai/o3",
+      "openai/o4-mini",
+    ]
+  },
+  {
+    id: "anthropic",
+    name: "Anthropic",
+    models: [
+      "anthropic/claude-3-7-sonnet-20250219",
+    ]
+  },
+  {
+    id: "google",
+    name: "Google",
+    models: [
+      "google/gemini-2.0-flash",
+      "google/gemini-2.5-pro-exp-03-25",
+    ]
+  },
+  {
+    id: "xai",
+    name: "xAI",
+    models: [
+      "xai/grok-3",
+      "xai/grok-3-mini",
+    ]
+  }
+];

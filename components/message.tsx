@@ -159,42 +159,6 @@ const Message = React.forwardRef<HTMLDivElement, { message: UIMessage, annotatio
         )}
       </div>
     </div>
-
-
-    // <div ref={ref} className={`${baseClass} ${message.role === "user" ? userClass : aiClass}`}>
-    //   {message.role === "assistant" && modelName && (
-    //     <motion.div className="text-sm text-sage-11 font-mono font-medium mb-2" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-    //       {String(modelName)} 
-    //     </motion.div>
-    //   )}
-
-    //   {message.content ? (
-    //     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-    //       <div className="prose prose-sm dark:prose-invert prose-pre:m-0 prose-pre:bg-transparent prose-pre:p-0 max-w-none prose-p:text-sage-12 prose-p:mb-4 prose-headings:text-sage-12 prose-strong:text-sage-12 prose-a:text-teal-9 hover:prose-a:text-teal-10 prose-blockquote:text-sage-11">
-    //         <ReactMarkdown
-    //           children={message.content}
-    //           components={{ code: CodeBlock }}
-    //         />
-    //       </div>
-    //     </motion.div>
-    //   ) : (
-    //     <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="flex flex-row items-center gap-2">
-    //       <CircleNotch size={12} weight="bold" className="text-teal-9 animate-spin" />
-    //       <p className="text-sage-11 font-mono text-xs font-medium">Generating...</p>
-    //     </motion.div>
-    //   )}
-
-    //   <div className="flex flex-row items-center gap-4 mt-4">
-    //     {message.role === "assistant" && creditsConsumed && (
-    //       <motion.div className="flex flex-row items-center gap-1 text-sage-11 font-mono font-medium" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-    //         <DiamondsFour size={12} weight="fill" className="text-teal-9" />
-    //         <p className="text-xs text-teal-11 dark:text-teal-5 font-medium">
-    //           {String(creditsConsumed)}
-    //         </p>
-    //       </motion.div>
-    //     )}
-    //   </div>
-    // </div>
     );
 });
 

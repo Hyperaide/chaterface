@@ -37,14 +37,22 @@ export function DatabaseProvider({ children }: { children: React.ReactNode }) {
           or: [
             {
               'user.id': user ? user.id : undefined,
+
             },
             {
-              'sessionId': sessionId ?? '',
+              sessionId: sessionId ?? '',
             }
           ]
         },
       },
       messages: {}
+    },
+    personas: {
+      $: {
+        where: {
+          'user.id': user ? user.id : undefined,
+        },
+      },
     }
   }, {
     ruleParams: {

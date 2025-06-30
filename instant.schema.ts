@@ -28,6 +28,12 @@ const _schema = i.schema({
       model: i.string(),
       creditsConsumed: i.number().optional(),
     }),
+    personas: i.entity({
+      name: i.string(),
+      createdAt: i.date(),
+      prompt: i.string(),
+      description: i.string().optional(),
+    }),
   },
   links: {
     conversationMessages: {
@@ -41,6 +47,14 @@ const _schema = i.schema({
     userProfile: {
       forward: { on: "userProfiles", has: "one", label: "user" },
       reverse: { on: "$users", has: "one", label: "profile" },
+    },
+    userPersonas: {
+      forward: { on: "personas", has: "one", label: "user" },
+      reverse: { on: "$users", has: "many", label: "personas" }
+    },
+    messagePersona: {
+      forward: { on: "messages", has: "one", label: "persona" },
+      reverse: { on: "personas", has: "many", label: "messages" }
     },
   },
   rooms: {},
