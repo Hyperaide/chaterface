@@ -51,7 +51,7 @@ const IntroductionModal: React.FC = () => {
             exit={{ opacity: 0, scale: 0.95, y: 50, transition: { delay: 0.2 } }}
             transition={{ duration: 0.2 }}
           >
-            <div className='flex flex-row px-4 py-2 bg-gray-2 border-b border-gray-3 justify-between sticky top-0 z-10'>
+            {/* <div className='flex flex-row px-4 py-2 bg-gray-2 border-b border-gray-3 justify-between sticky top-0 z-10'>
               <div className='flex flex-row items-center gap-2'>
                 <div onClick={() => setIsOpen(false)} className='cursor-pointer h-3 w-3 bg-tomato-9 rounded-full flex items-center justify-center group'>
                   <div className='h-1 w-1 bg-tomato-12 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
@@ -66,12 +66,12 @@ const IntroductionModal: React.FC = () => {
               <div className='flex flex-row items-center gap-px bg-gray-4 p-px rounded-md'>
                 <ThemeToggle />
               </div>
-            </div>
+            </div> */}
 
             <div className='w-full border-gray-3 border-b'>
-              <div className='flex flex-row items-center gap-2 mx-auto'>
+              <div className='flex flex-row items-center gap-2 mx-auto p-2'>
                 <div
-                  className="flex flex-col w-full relative overflow-hidden bg-hero"
+                  className="flex flex-col w-full relative overflow-hidden bg-hero rounded-lg"
                   style={{
                     backgroundSize: "cover",
                     backgroundPosition: "center",
@@ -86,7 +86,7 @@ const IntroductionModal: React.FC = () => {
                   </div>
                   <div className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto py-4 pb-40 px-4 gap-1">
                     <h1 className={`text-2xl font-medium text-gray-2 relative z-10 dark:text-gray-12`}>Your Interface to Intelligence</h1>
-                    <p className={`text-base text-gray-4 relative z-10 dark:text-gray-11`}>Chaterface is an open source chat interface for large language models.</p>
+                    <p className={`text-base text-gray-4 relative z-10 dark:text-gray-11 max-w-xs text-center`}>Chaterface is an open source chat interface for large language models.</p>
                   </div>
                 </div>
               </div>

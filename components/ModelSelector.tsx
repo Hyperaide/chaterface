@@ -66,7 +66,7 @@ export default function ModelSelector({
     <div>
       <button
         type="button"
-        className="bg-gray-1 dark:bg-gray-3 px-2 py-1 text-sm flex items-center gap-2 rounded-md border border-gray-3 dark:border-gray-5 hover:bg-gray-2 dark:hover:bg-gray-4 transition-colors cursor-pointer text-gray-10 dark:text-gray-11"
+        className="bg-gray-1 dark:bg-gray-3 px-2 py-1 text-base flex items-center gap-2 rounded-md border border-gray-3 dark:border-gray-5 hover:bg-gray-2 dark:hover:bg-gray-4 transition-colors cursor-pointer text-gray-10 dark:text-gray-11"
         ref={refs.setReference}
         {...getReferenceProps()}
       >
@@ -113,7 +113,7 @@ export default function ModelSelector({
                   }}
                 >
                   <div className="flex flex-row gap-2">
-                    <p className="text-xs font-medium">
+                    <p className="text-xs">
                       {model.name}
                     </p>
                     {model.isNew && (

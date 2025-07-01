@@ -1,6 +1,8 @@
 import { motion } from "framer-motion";
 import ModelSelector from "./ModelSelector";
 import React from "react";
+import { PaperPlaneTilt } from "@phosphor-icons/react";
+import { useDatabase } from "@/providers/database-provider";
 
 interface AnimatedMessageInputProps {
   value: string;
@@ -11,6 +13,8 @@ interface AnimatedMessageInputProps {
   isLoading?: boolean;
   disabled?: boolean;
   layoutId?: string;
+  selectedPersona?: string;
+  setSelectedPersona?: (personaId: string) => void;
 }
 
 const AnimatedMessageInput: React.FC<AnimatedMessageInputProps> = ({
@@ -23,6 +27,7 @@ const AnimatedMessageInput: React.FC<AnimatedMessageInputProps> = ({
   disabled = false,
   layoutId = "message-input",
 }) => {
+  const { data } = useDatabase();
   return (
     <motion.div
       layoutId={layoutId}
@@ -54,17 +59,21 @@ const AnimatedMessageInput: React.FC<AnimatedMessageInputProps> = ({
               }}
               disabled={disabled || isLoading}
             />
-            <div className="flex flex-row p-2 pb-2 justify-between items-center overflow-hidden ">
+            <div className="flex flex-row p-2 pb-2 justify-between items-center overflow-hidden gap-2 ">
               <ModelSelector
                 selectedModel={selectedModel}
                 setSelectedModel={setSelectedModel}
               />
+              
               <button
                 type="submit"
-                className="ml-auto bg-gray-2 hover:bg-gray-3 text-gray-12 border border-gray-3 transition-colors px-2 py-1 text-base rounded-md"
+                className="flex flex-row gap-1 items-center ml-auto bg-gray-2 hover:bg-gray-3 text-gray-12 border border-gray-3 transition-colors px-2 py-1 text-base rounded-md"
                 disabled={disabled || isLoading || !value.trim()}
               >
-                {isLoading ? "Sending..." : "Send"}
+                <PaperPlaneTilt size={14} weight="fill" className="text-gray-12" />
+                <p className="text-xs text-gray-12">
+                  {isLoading ? "Sending..." : "Send"}
+                </p>
               </button>
             </div>
           </form>

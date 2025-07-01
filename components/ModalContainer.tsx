@@ -45,9 +45,14 @@ export function ModalContainer() {
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Background */}
-          <motion.div initial={{opacity: 0}} animate={{opacity: 1}} exit={{opacity: 0}} className={`bg-sage-1/80 backdrop-blur h-screen w-screen absolute inset-0 z-20 ${theme === 'dark' ? 'dark' : ''}`}></motion.div>
-          {/* Modal */}
+          {/* Background Overlay */}
+          <motion.div 
+            initial={{opacity: 0}} 
+            animate={{opacity: 1}} 
+            exit={{opacity: 0}} 
+            className={`fixed inset-0 w-screen h-screen bg-gray-1/50 z-50 ${theme === 'dark' ? 'dark' : ''}`}
+          />
+          {/* Modal Content */}
           <FloatingFocusManager context={context}>
             <div
               ref={refs.setFloating}
@@ -55,9 +60,11 @@ export function ModalContainer() {
                 "aria-labelledby": labelId,
                 "aria-describedby": descriptionId
               })}
-              className={`z-40 ${theme === 'dark' ? 'dark' : ''}`}
+              className={`fixed inset-0 z-60 flex p-20 justify-center pointer-events-none ${theme === 'dark' ? 'dark' : ''}`}
             >
-              {modal}
+              <div className="pointer-events-auto">
+                {modal}
+              </div>
             </div>
           </FloatingFocusManager>
         </>

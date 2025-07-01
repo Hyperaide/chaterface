@@ -3,6 +3,10 @@ import { openai } from '@ai-sdk/openai';
 import { anthropic } from '@ai-sdk/anthropic';
 import { google } from '@ai-sdk/google';
 import { xai } from '@ai-sdk/xai';
+import { createOpenAI } from '@ai-sdk/openai';
+import { createAnthropic } from '@ai-sdk/anthropic';
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
+import { createXai } from '@ai-sdk/xai';
 import { db } from '@/lib/instant-admin';
 import { tx } from '@instantdb/react';
 import { calculateCreditCost } from '@/constants/models';
@@ -48,16 +52,17 @@ const createErrorResponse = (message: string, status: number = 400) => {
   });
 };
 
-const createProviderStream = (provider: string, modelId: string, messages: CoreMessage[], userProfile: UserProfile | null) => {
+const createProviderStream = (provider: string, modelId: string, messages: CoreMessage[], userProfile: UserProfile | null, apiKey: string) => {
+  // Create provider instances with the provided API key
   const providerMap = {
-    [PROVIDERS.OPENAI]: openai,
-    [PROVIDERS.ANTHROPIC]: anthropic,
-    [PROVIDERS.GOOGLE]: google,
-    [PROVIDERS.XAI]: xai,
+    [PROVIDERS.OPENAI]: createOpenAI({ apiKey }),
+    [PROVIDERS.ANTHROPIC]: createAnthropic({ apiKey }),
+    [PROVIDERS.GOOGLE]: createGoogleGenerativeAI({ apiKey }),
+    [PROVIDERS.XAI]: createXai({ apiKey }),
   };
 
-  const providerModel = providerMap[provider as keyof typeof providerMap];
-  if (!providerModel) {
+  const providerInstance = providerMap[provider as keyof typeof providerMap];
+  if (!providerInstance) {
     throw new Error(`Unsupported provider: ${provider}`);
   }
 
@@ -65,7 +70,7 @@ const createProviderStream = (provider: string, modelId: string, messages: CoreM
     execute: dataStream => {
       dataStream.writeMessageAnnotation({ model: `${provider}/${modelId}` });
       const result = streamText({
-        model: providerModel(modelId),
+        model: providerInstance(modelId),
         messages,
         temperature: 1,
         onFinish: async (data: { usage: LanguageModelUsage }) => {
@@ -92,6 +97,12 @@ export async function POST(req: Request) {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader?.startsWith('Bearer ')) {
       return createErrorResponse('Missing or invalid Authorization header', 401);
+    }
+
+    // Extract API key from Authorization header
+    const apiKey = authHeader.substring('Bearer '.length);
+    if (!apiKey) {
+      return createErrorResponse('Invalid API key', 401);
     }
 
     // Get session info
@@ -131,7 +142,7 @@ export async function POST(req: Request) {
     }
 
     const [provider, modelId] = model.split('/');
-    return createProviderStream(provider, modelId, messages, userProfile);
+    return createProviderStream(provider, modelId, messages, userProfile, apiKey);
 
   } catch (error) {
     if (error instanceof SyntaxError) {

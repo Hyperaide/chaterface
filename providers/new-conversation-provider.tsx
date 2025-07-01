@@ -21,19 +21,6 @@ export function NewConversationProvider({ children }: { children: React.ReactNod
 
   const {db} = useDatabase()
 
-  // useEffect(() => {
-  //   if(newConversationMessage){
-  //     db.transact(db.tx.messages[id()].update({
-  //       content: newConversationMessage,
-  //       role: "user",
-  //       createdAt: DateTime.now().toISO(),
-  //       model: "openai/gpt-4o"
-  //     }).link({ conversation: newConversationId ?? "" }));
-  //   }
-  //   setNewConversationMessage(null);
-  //   setNewConversationId(null);
-  // }, [newConversationMessage, newConversationId]);
-
   return (
     <NewConversationContext.Provider value={{ newConversationMessage, newConversationId, setNewConversationMessage, setNewConversationId }}>
       {children}

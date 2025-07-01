@@ -6,6 +6,7 @@ interface ProviderKeys {
   openai: string | null;
   anthropic: string | null;
   google: string | null;
+  xai: string | null;
 }
 
 interface KeyContextType {
@@ -23,7 +24,8 @@ export function KeyProvider({ children }: { children: React.ReactNode }) {
   const [providerKeys, setProviderKeys] = useState<ProviderKeys>({
     openai: null,
     anthropic: null,
-    google: null
+    google: null,
+    xai: null
   });
   const [isInitialized, setIsInitialized] = useState(false);
 
@@ -33,7 +35,8 @@ export function KeyProvider({ children }: { children: React.ReactNode }) {
       const savedKeys: ProviderKeys = {
         openai: localStorage.getItem(`${LOCAL_STORAGE_PREFIX}openai`),
         anthropic: localStorage.getItem(`${LOCAL_STORAGE_PREFIX}anthropic`),
-        google: localStorage.getItem(`${LOCAL_STORAGE_PREFIX}google`)
+        google: localStorage.getItem(`${LOCAL_STORAGE_PREFIX}google`),
+        xai: localStorage.getItem(`${LOCAL_STORAGE_PREFIX}xai`)
       };
       setProviderKeys(savedKeys);
     } catch (error) {
@@ -68,7 +71,7 @@ export function KeyProvider({ children }: { children: React.ReactNode }) {
 
   const getProviderKey = (model: string) => {
     const [provider, modelId] = model.split('/');
-    return localStorage.getItem(`${LOCAL_STORAGE_PREFIX}${provider}`);
+    return providerKeys[provider as keyof ProviderKeys] || null;
   }
 
   // Don't render children until we've checked localStorage

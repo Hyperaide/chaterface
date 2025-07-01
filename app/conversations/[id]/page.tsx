@@ -19,6 +19,8 @@ import { useMessageStore } from "@/app/utils/message-store";
 import ModelSelector from "@/components/ModelSelector";
 import AnimatedMessageInput from "@/components/AnimatedMessageInput";
 import { useSidebarStore } from "@/components/Sidebar";
+import Link from "next/link";
+import { Warning } from "@phosphor-icons/react";
 
 type Conversation = InstaQLEntity<AppSchema, "conversations">;
 type Message = InstaQLEntity<AppSchema, "messages">;
@@ -37,11 +39,18 @@ export default function ConversationPage() {
   const [selectedModel, setSelectedModel] = useState<string>(models[0].id);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [shouldHighlight, setShouldHighlight] = useState<boolean>(false);
 
   const [initialMessages, setInitialMessages] = useState<any[]>([]);
 
   const hasRun = useRef(false);
   const { sidebarOpen } = useSidebarStore();
+
+  // Check if the selected model has an API key
+  const hasApiKey = () => {
+    const key = getProviderKey(selectedModel);
+    return key && key.length > 0;
+  };
 
   useEffect(() => {
     if (message !== "" && !hasRun.current) {
@@ -141,6 +150,14 @@ export default function ConversationPage() {
       return;
     }
 
+    // Check if API key is set before creating message
+    if (!hasApiKey()) {
+      // Trigger highlight animation
+      setShouldHighlight(true);
+      setTimeout(() => setShouldHighlight(false), 1000);
+      return;
+    }
+
     setInput("");
 
     const newMessageId = newInstantId();
@@ -189,6 +206,34 @@ export default function ConversationPage() {
       </div>
       
       <div className="flex flex-col gap-4 p-4  mx-auto w-full absolute bottom-0 bg-gradient-to-t from-gray-1 to-transparent via-20% via-gray-1">
+        {!hasApiKey() && (
+          <Link 
+            href="/settings" 
+            className={`flex items-center gap-2 p-2.5 mx-auto max-w-md bg-gray-2 dark:bg-gray-2 border border-gray-3 dark:border-gray-3 rounded-lg text-xs transition-all duration-300 hover:bg-gray-3 dark:hover:bg-gray-3 cursor-pointer hover:border-gray-4 dark:hover:border-gray-4 ${
+              shouldHighlight ? 'animate-pulse border-red-6 dark:border-red-6 bg-red-3 dark:bg-red-3' : ''
+            }`}
+          >
+            <Warning size={14} weight="duotone" className={`flex-shrink-0 transition-colors duration-300 ${
+              shouldHighlight ? 'text-red-10 dark:text-red-11' : 'text-gray-10'
+            }`} />
+            <span className={`transition-colors duration-300 ${
+              shouldHighlight ? 'text-red-11 dark:text-red-12' : 'text-gray-11'
+            }`}>
+              Add your {selectedModel.split('/')[0]} API key to continue
+              <span className={`ml-1 font-medium transition-colors ${
+                shouldHighlight ? 'text-red-12 dark:text-red-12' : 'text-gray-12'
+              }`}>
+                →
+              </span>
+            </span>
+          </Link>
+        )}
+        {errorMessage && (
+          <div className="flex items-center gap-2 p-2.5 mx-auto max-w-md bg-red-2 dark:bg-red-3 border border-red-3 dark:border-red-6 rounded-lg text-xs">
+            <Warning size={14} weight="duotone" className="text-red-10 dark:text-red-11 flex-shrink-0" />
+            <span className="text-red-11 dark:text-red-12">{errorMessage}</span>
+          </div>
+        )}
         <AnimatedMessageInput
           value={input}
           onChange={handleInputChange}
